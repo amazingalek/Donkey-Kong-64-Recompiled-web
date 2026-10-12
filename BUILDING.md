@@ -96,9 +96,21 @@ installed (`cargo install naga-cli`):
 
 ```bash
 embuilder build sdl2-mt freetype-legacysjlj      # once
-emcmake cmake -S . -B build-web -G Ninja -DCMAKE_BUILD_TYPE=Release -DRT64_NAGA_EXECUTABLE=<naga>     -DPATCHES_C_COMPILER=<clang with a MIPS target> -DPATCHES_LD=<ld.lld>
+emcmake cmake -S . -B build-web -G Ninja -DCMAKE_BUILD_TYPE=Release -DRT64_NAGA_EXECUTABLE=<naga> \
+    -DPATCHES_C_COMPILER=<clang with a MIPS target> -DPATCHES_LD=<ld.lld>
 cmake --build build-web --target DK64Recompiled
 ```
+
+A first build compiles about 670 files, which takes half an hour or more on Windows. Two things make later builds
+shorter:
+
+- [ccache](https://ccache.dev) on `PATH` when you configure. Every compile then goes through it, so a new build dir,
+  or another checkout of this repo with its build dir in the same place, compiles nothing that was compiled before:
+  a second, fresh build dir took 8 minutes instead of 35 on a busy machine, most of it the link. Keep the build dir
+  inside the checkout (`build-web`): from one outside it, about half the files miss. The cache is per user, so it also
+  serves other recomps built on the same web support.
+- `-DN64RECOMP_BROWSER_FAST_LINK=ON` when you only want to try something. The link then takes seconds instead of
+  minutes, because it skips Binaryen's optimization of the whole program. Leave it off for a page that people play.
 
 vcpkg isn't needed for the page: it brings curl, for the mod store. `build-web` then holds `DK64Recompiled.html`,
 `.js`, `.wasm`, `.data` and `coi_serviceworker.js`. The page needs a browser with WebGPU (Chrome or Edge 113 and up)

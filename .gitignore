@@ -18,6 +18,9 @@ build/
 build-cmake/
 *.o
 
+# The web page's build dirs, inside the checkout (BUILDING.md, "The web page")
+build-web*/
+
 # Flatpak build process
 repo/
 

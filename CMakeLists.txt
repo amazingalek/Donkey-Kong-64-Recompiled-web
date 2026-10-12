@@ -49,6 +49,8 @@ if (EMSCRIPTEN)
     # there. XXH_HAS_INCLUDE is used for nothing else, so XXH3 stays scalar.
     add_compile_options("-DXXH_HAS_INCLUDE(x)=0")
     add_link_options(-pthread -fwasm-exceptions)
+    # ccache when it is on PATH, for shorter builds (BUILDING.md, "The web page"); before rt64 and the runtime are added.
+    include(${CMAKE_SOURCE_DIR}/lib/N64Recomp-browser/frontend/build_speed.cmake)
 endif()
 
 # Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
