@@ -7,6 +7,12 @@
 > by the Donkey Kong 64: Recompiled team, whose no-AI stance (CONTRIBUTING.md) is about their project and still holds
 > there: nothing here is offered upstream, and please don't take issues with this fork to them. Building the page:
 > [BUILDING.md](BUILDING.md#the-web-page).
+
+**Play it in the browser: https://amazingalek.github.io/Donkey-Kong-64-Recompiled-web/**, with your own ROM (the plain
+one, not a decompressed one), picked in the launcher and kept in the browser. It needs WebGPU (Chrome or Edge 113 and
+up). The page is built from this branch where the ROM is and published with N64Recomp-browser's
+`tools/publish_page.sh`, so it can be a commit or two behind.
+
 Donkey Kong 64: Recompiled is a project that uses [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) to **statically recompile** Donkey Kong 64 into a native port with many new features and enhancements. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide some of these enhancements.
 
 ### [Check out the latest release here](https://github.com/Rainchus/Donkey-Kong-64-Recompiled/releases).
