@@ -36,6 +36,9 @@
 #include "recompui/renderer.h"
 #include "recompui/config.h"
 #include "util/file.h"
+#ifdef __EMSCRIPTEN__
+#include "audio_output.h"
+#endif
 #include "recompinput/input_events.h"
 #include "recompinput/recompinput.h"
 #include "recompinput/profiles.h"
@@ -290,6 +293,27 @@ static uint32_t discarded_output_frames;
 
 constexpr uint32_t bytes_per_frame = input_channels * sizeof(float);
 
+// On a page, sound plays through N64Recomp-browser's AudioWorklet output (audio_output.h) instead of SDL's queue:
+// Emscripten's SDL2 plays from the page's thread, where WebGPU's work runs, and its sound broke up whenever that
+// thread was busy.
+#ifdef __EMSCRIPTEN__
+static uint64_t get_queued_audio_bytes() {
+    return uint64_t(n64recomp_browser::audio::queued_frames()) * output_channels * sizeof(float);
+}
+
+static void queue_audio(const float* samples, uint32_t byte_count) {
+    n64recomp_browser::audio::queue(samples, byte_count / (output_channels * sizeof(float)));
+}
+#else
+static uint64_t get_queued_audio_bytes() {
+    return SDL_GetQueuedAudioSize(audio_device);
+}
+
+static void queue_audio(const float* samples, uint32_t byte_count) {
+    SDL_QueueAudio(audio_device, samples, byte_count);
+}
+#endif
+
 void queue_samples(int16_t* audio_data, size_t sample_count) {
     // Buffer for holding the output of swapping the audio channels. This is reused across
     // calls to reduce runtime allocations.
@@ -334,7 +358,7 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
         throw std::runtime_error("Error using SDL audio converter");
     }
 
-    uint64_t cur_queued_microseconds = uint64_t(SDL_GetQueuedAudioSize(audio_device)) / bytes_per_frame * 1000000 / sample_rate;
+    uint64_t cur_queued_microseconds = get_queued_audio_bytes() / bytes_per_frame * 1000000 / sample_rate;
     uint32_t num_bytes_to_queue = audio_convert.len_cvt - output_channels * discarded_output_frames * sizeof(swap_buffer[0]);
     float* samples_to_queue = swap_buffer.data() + output_channels * discarded_output_frames / 2;
 
@@ -352,13 +376,13 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
 
     // Queue the swapped audio data.
     // Offset the data start by only half the discarded frame count as the other half of the discarded frames are at the end of the buffer.
-    SDL_QueueAudio(audio_device, samples_to_queue, num_bytes_to_queue);
+    queue_audio(samples_to_queue, num_bytes_to_queue);
 }
 
 size_t get_frames_remaining() {
     constexpr float buffer_offset_frames = 1.0f;
     // Get the number of remaining buffered audio bytes.
-    uint64_t buffered_byte_count = SDL_GetQueuedAudioSize(audio_device);
+    uint64_t buffered_byte_count = get_queued_audio_bytes();
 
     // Scale the byte count based on the ratio of sample rates and channel counts.
     buffered_byte_count = buffered_byte_count * 2 * sample_rate / output_sample_rate / output_channels;
@@ -397,6 +421,9 @@ void set_frequency(uint32_t freq) {
 }
 
 bool reset_audio(uint32_t output_freq) {
+#ifdef __EMSCRIPTEN__
+    output_freq = n64recomp_browser::audio::open(output_channels);
+#else
     SDL_AudioSpec spec_desired{
         .freq = (int)output_freq,
         .format = AUDIO_F32,
@@ -417,6 +444,7 @@ bool reset_audio(uint32_t output_freq) {
     }
 
     SDL_PauseAudioDevice(audio_device, 0);
+#endif
 
     output_sample_rate = output_freq;
     update_audio_converter();
