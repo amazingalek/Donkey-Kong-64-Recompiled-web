@@ -1,17 +1,18 @@
 [submodule "lib/N64ModernRuntime"]
 	path = lib/N64ModernRuntime
-	url = https://github.com/Killklli/N64ModernRuntime
-	branch = patch-1
+	url = https://github.com/amazingalek/N64ModernRuntime-web
 [submodule "lib/rt64"]
 	path = lib/rt64
-	url = https://github.com/rt64/rt64
+	url = https://github.com/amazingalek/rt64-web
 [submodule "lib/RecompFrontend"]
 	path = lib/RecompFrontend
-	url = https://github.com/Killklli/RecompFrontend
-	branch = mod_store
+	url = https://github.com/amazingalek/RecompFrontend-web
 [submodule "lib/dk64_decomp"]
 	path = lib/dk64_decomp
 	url = https://gitlab.com/dk64_decomp/dk64
 [submodule "lib/vcpkg"]
 	path = lib/vcpkg
 	url = https://github.com/microsoft/vcpkg
+[submodule "lib/recomp-web"]
+	path = lib/recomp-web
+	url = https://github.com/amazingalek/recomp-web

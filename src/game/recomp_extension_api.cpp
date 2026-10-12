@@ -2,6 +2,11 @@
 #include <mutex>
 #include <deque>
 
+#include <climits>
+#ifdef __EMSCRIPTEN__
+// Emscripten's <limits.h> defines PAGESIZE, the name of one of slot_map's template parameters.
+#undef PAGESIZE
+#endif
 #include "slot_map.h"
 
 #include "librecomp/helpers.hpp"

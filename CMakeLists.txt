@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 
-if(NOT DEFINED ENV{VCPKG_ROOT})
-    set(ENV{VCPKG_ROOT} ${CMAKE_SOURCE_DIR}/lib/vcpkg)
-endif()
+# vcpkg brings curl for the mod store, which the page (Emscripten, below) doesn't have. EMSCRIPTEN isn't set until
+# project(), so the toolchain file says which build this is.
+if (NOT CMAKE_TOOLCHAIN_FILE MATCHES "Emscripten")
+    if(NOT DEFINED ENV{VCPKG_ROOT})
+        set(ENV{VCPKG_ROOT} ${CMAKE_SOURCE_DIR}/lib/vcpkg)
+    endif()
 
-include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+    include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+endif()
 
 if (APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
@@ -33,6 +37,18 @@ endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     option(RECOMP_FLATPAK "Configure the build for Flatpak compatibility." OFF)
+endif()
+
+# With Emscripten (emcmake cmake), the game builds as a page for a browser, DK64Recompiled.html, through
+# lib/recomp-web/frontend: RT64 and the menus on WebGPU, mods off (BUILDING.md, "The web page").
+if (EMSCRIPTEN)
+    # Threads are pthreads (SharedArrayBuffer), and the runtime ends a game thread by throwing. -msimd128 is wasm SIMD,
+    # which every browser with WebGPU has.
+    add_compile_options(-pthread -fwasm-exceptions -msimd128)
+    # With -msimd128 xxHash would take its NEON path through Emscripten's arm_neon.h, which doesn't compile in C++
+    # there. XXH_HAS_INCLUDE is used for nothing else, so XXH3 stays scalar.
+    add_compile_options("-DXXH_HAS_INCLUDE(x)=0")
+    add_link_options(-pthread -fwasm-exceptions)
 endif()
 
 # Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
@@ -65,6 +81,12 @@ set(BUILD_SHARED_LIBS OFF)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
 
+if (EMSCRIPTEN)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/lib/recomp-web/frontend ${CMAKE_BINARY_DIR}/web_frontend)
+    # fmt 11.1 (N64Recomp's) leans on <cstdlib> arriving through other headers, which Emscripten's libc++ doesn't do.
+    target_compile_options(fmt PRIVATE -include cstdlib)
+endif()
+
 target_include_directories(rt64 PRIVATE ${CMAKE_BINARY_DIR}/rt64/src)
 
 # RecompiledFuncs - Library containing the primary recompiler output
@@ -90,6 +112,12 @@ file(GLOB FUNC_CXX_SOURCES ${CMAKE_SOURCE_DIR}/RecompiledFuncs/*.cpp)
 
 target_sources(RecompiledFuncs PRIVATE ${FUNC_C_SOURCES} ${FUNC_CXX_SOURCES})
 
+# WebAssembly checks a call's signature when it links and turns a call to an undeclared function into a trap, so with
+# Emscripten that is an error in the recompiled code. N64Recomp's funcs.h declares everything its code calls.
+if (EMSCRIPTEN)
+    target_compile_options(RecompiledFuncs PRIVATE -Werror=implicit-function-declaration)
+endif()
+
 # PatchesLib - Library containing the recompiled output for any custom function patches
 add_library(PatchesLib STATIC)
 
@@ -114,6 +142,11 @@ target_sources(PatchesLib PRIVATE
 )
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/RecompiledPatches/patches.c PROPERTIES COMPILE_FLAGS -fno-strict-aliasing)
+
+# The same for the patches, whose own funcs.h declares the game's functions they call.
+if (EMSCRIPTEN)
+    target_compile_options(PatchesLib PRIVATE -Werror=implicit-function-declaration)
+endif()
 
 # Build patches elf
 if(NOT DEFINED PATCHES_C_COMPILER)
@@ -321,11 +354,15 @@ set (DXC_CS_OPTS "${DXC_COMMON_OPTS}" "-E" "CSMain" "-T cs_6_0")
 set (DXC_GS_OPTS "${DXC_COMMON_OPTS}" "-E" "GSMain" "-T gs_6_0")
 set (DXC_RT_OPTS "${DXC_COMMON_OPTS}" "-D" "RT_SHADER" "-T" "lib_6_3" "-fspv-target-env=vulkan1.1spirv1.4" "-fspv-extension=SPV_KHR_ray_tracing" "-fspv-extension=SPV_EXT_descriptor_indexing")
 
-if (${WIN32})
-    set (DXC "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxc.exe")
+if (WIN32)
     add_compile_definitions(NOMINMAX)
+endif()
+
+# DXC runs on the machine that builds, which for the page (Emscripten) isn't the target.
+if (CMAKE_HOST_WIN32)
+    set (DXC "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxc.exe")
 else()
-    if (APPLE)
+    if (CMAKE_HOST_APPLE)
         # Apple's binary is universal, so it'll work on both x86_64 and arm64
         set (DXC "DYLD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/arm64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/arm64/dxc-macos")
         if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
@@ -355,8 +392,18 @@ target_link_libraries(DK64Recompiled PRIVATE
     librecomp
     ultramodern
     rt64
-    nfd
 )
+
+if (EMSCRIPTEN)
+    # The page (lib/recomp-web/frontend), with the menus' assets and the controller mappings in its .data file. No ROM:
+    # the player picks theirs in the launcher, and it stays in the browser.
+    recomp_web_frontend_page(DK64Recompiled)
+    target_link_options(DK64Recompiled PRIVATE
+        "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/assets@/assets"
+        "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/recompcontrollerdb.txt@/recompcontrollerdb.txt")
+else()
+    target_link_libraries(DK64Recompiled PRIVATE nfd)
+endif()
 
 # Embed all .nrm files in the "mods" directory
 file(GLOB NRM_FILES "${CMAKE_SOURCE_DIR}/mods/*.nrm")
