@@ -28,6 +28,8 @@ ignored = [
 [[patches.hook]]
 func = "func_dk64_boot_800005A8"
 text = """{
+    // Declared here, as WebAssembly traps on a call that doesn't match its callee (src/game/recomp_api.cpp).
+    void load_dk64_overlay(uint32_t compressed_rom, int32_t ram_addr, uint32_t size);
     int32_t ovl_rom_start = 0x113F0;
     int32_t ovl_ram = 0x805FB300;
     int32_t uncompressed_size = 0x1DE360;
@@ -37,7 +39,7 @@ before_vram = 0x80000734
 
 [[patches.hook]]
 func = "func_global_asm_8060B140"
-text = "load_dk64_overlay(ctx->r4, 0, 0);"
+text = "void load_dk64_overlay(uint32_t compressed_rom, int32_t ram_addr, uint32_t size); load_dk64_overlay(ctx->r4, 0, 0);"
 before_vram = 0x8060B140
 
 #allocate 4 extra bytes per actor
