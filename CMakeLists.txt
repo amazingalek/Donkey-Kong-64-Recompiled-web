@@ -40,7 +40,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 # With Emscripten (emcmake cmake), the game builds as a page for a browser, DK64Recompiled.html, through
-# lib/recomp-web/frontend: RT64 and the menus on WebGPU, mods off (BUILDING.md, "The web page").
+# lib/N64Recomp-browser/frontend: RT64 and the menus on WebGPU, mods off (BUILDING.md, "The web page").
 if (EMSCRIPTEN)
     # Threads are pthreads (SharedArrayBuffer), and the runtime ends a game thread by throwing. -msimd128 is wasm SIMD,
     # which every browser with WebGPU has.
@@ -82,7 +82,7 @@ set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
 
 if (EMSCRIPTEN)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/lib/recomp-web/frontend ${CMAKE_BINARY_DIR}/web_frontend)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/lib/N64Recomp-browser/frontend ${CMAKE_BINARY_DIR}/web_frontend)
     # fmt 11.1 (N64Recomp's) leans on <cstdlib> arriving through other headers, which Emscripten's libc++ doesn't do.
     target_compile_options(fmt PRIVATE -include cstdlib)
 endif()
@@ -395,9 +395,9 @@ target_link_libraries(DK64Recompiled PRIVATE
 )
 
 if (EMSCRIPTEN)
-    # The page (lib/recomp-web/frontend), with the menus' assets and the controller mappings in its .data file. No ROM:
+    # The page (lib/N64Recomp-browser/frontend), with the menus' assets and the controller mappings in its .data file. No ROM:
     # the player picks theirs in the launcher, and it stays in the browser.
-    recomp_web_frontend_page(DK64Recompiled)
+    n64recomp_browser_frontend_page(DK64Recompiled)
     target_link_options(DK64Recompiled PRIVATE
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/assets@/assets"
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/recompcontrollerdb.txt@/recompcontrollerdb.txt")

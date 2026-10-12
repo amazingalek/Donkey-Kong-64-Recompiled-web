@@ -13,6 +13,6 @@
 [submodule "lib/vcpkg"]
 	path = lib/vcpkg
 	url = https://github.com/microsoft/vcpkg
-[submodule "lib/recomp-web"]
-	path = lib/recomp-web
-	url = https://github.com/amazingalek/recomp-web
+[submodule "lib/N64Recomp-browser"]
+	url = https://github.com/amazingalek/N64Recomp-browser
+	path = lib/N64Recomp-browser
