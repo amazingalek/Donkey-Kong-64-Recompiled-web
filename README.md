@@ -1,4 +1,12 @@
 # Donkey Kong 64: Recompiled
+
+> [!WARNING]
+> **This is amazingalek/Donkey-Kong-64-Recompiled-web, a fork, not Donkey Kong 64: Recompiled.** Its `web` branch
+> builds the game into a web page (WebGPU, through [recomp-web](https://github.com/amazingalek/recomp-web)), and
+> everything on that branch past upstream's commits was written by AI (Claude). It is not made, endorsed or supported
+> by the Donkey Kong 64: Recompiled team, whose no-AI stance (CONTRIBUTING.md) is about their project and still holds
+> there: nothing here is offered upstream, and please don't take issues with this fork to them. Building the page:
+> [BUILDING.md](BUILDING.md#the-web-page).
 Donkey Kong 64: Recompiled is a project that uses [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) to **statically recompile** Donkey Kong 64 into a native port with many new features and enhancements. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide some of these enhancements.
 
 ### [Check out the latest release here](https://github.com/Rainchus/Donkey-Kong-64-Recompiled/releases).

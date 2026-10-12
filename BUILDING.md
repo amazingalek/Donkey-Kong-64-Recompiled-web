@@ -80,3 +80,29 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 
 > [!IMPORTANT]
 > In the game itself, you should be using a standard ROM, not the decompressed one.
+
+## The web page
+
+This fork's `web` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
+that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
+commits [recomp-web](https://github.com/amazingalek/recomp-web)'s `forks.txt` names, and `lib/recomp-web` makes the
+game a page. Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
+frames.
+
+Do steps 1 to 4 with the N64Recomp in `lib/N64ModernRuntime/N64Recomp` (the web fork's: its `funcs.h` declares every
+function the generated code calls, which a WebAssembly build needs); the generated code is the same for both builds.
+Then, with the Emscripten SDK installed and activated and [naga](https://github.com/gfx-rs/wgpu/tree/trunk/naga)
+installed (`cargo install naga-cli`):
+
+```bash
+embuilder build sdl2-mt freetype-legacysjlj      # once
+emcmake cmake -S . -B build-web -G Ninja -DCMAKE_BUILD_TYPE=Release -DRT64_NAGA_EXECUTABLE=<naga>     -DPATCHES_C_COMPILER=<clang with a MIPS target> -DPATCHES_LD=<ld.lld>
+cmake --build build-web --target DK64Recompiled
+```
+
+vcpkg isn't needed for the page: it brings curl, for the mod store. `build-web` then holds `DK64Recompiled.html`,
+`.js`, `.wasm`, `.data` and `coi_serviceworker.js`. The page needs a browser with WebGPU (Chrome or Edge 113 and up)
+and must be cross-origin isolated: serve the folder with `Cross-Origin-Opener-Policy: same-origin` and
+`Cross-Origin-Embedder-Policy: require-corp`, or on a host that can't set headers, as is, and `coi_serviceworker.js`
+sets them after one reload. The player picks their ROM (the plain one, not the decompressed one) in the launcher; it,
+the settings and the saves are kept in the browser's IndexedDB for that origin.
