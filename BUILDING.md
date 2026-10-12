@@ -87,7 +87,12 @@ This fork's `main` branch also builds with [Emscripten](https://emscripten.org) 
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
 commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
 game a page. Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
-frames.
+frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
+(`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
+there, so the photo would show whatever the memory last held. In Chrome the readback makes every display list wait
+for the GPU process (5-6 ms a list, measured on another game). The game's other uses of a frame, the snapshots in
+transitions (`func_global_asm_8070A848`, patched in `patches/patches_framebuffer.c`), copy it on the GPU, which RT64
+does either way.
 
 Do steps 1 to 4 with the N64Recomp in `lib/N64ModernRuntime/N64Recomp` (the web fork's: its `funcs.h` declares every
 function the generated code calls, which a WebAssembly build needs); the generated code is the same for both builds.
