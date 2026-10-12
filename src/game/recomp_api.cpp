@@ -465,6 +465,20 @@ extern "C" void load_dk64_overlay(uint32_t compressed_rom, int32_t ram_addr, uin
     }
 }
 
+// The patches' natives (patches/syms.ld). A patch calls a native as it calls a recompiled function, with rdram and
+// the MIPS registers, so these take that and pass on the arguments. The patches called load_dk64_overlay and
+// ultramodern's yield_self directly before: x86 let that through (yield_self ignored the extra argument, and
+// load_dk64_overlay was handed two pointers for three numbers and loaded nothing), and WebAssembly traps on it.
+extern "C" void dk64_load_overlay(uint8_t* rdram, recomp_context* ctx) {
+    load_dk64_overlay(_arg<0, uint32_t>(rdram, ctx), _arg<1, int32_t>(rdram, ctx), _arg<2, uint32_t>(rdram, ctx));
+}
+
+extern "C" void yield_self(uint8_t* rdram); // ultramodern/src/scheduling.cpp
+
+extern "C" void dk64_yield_self(uint8_t* rdram, recomp_context* ctx) {
+    yield_self(rdram);
+}
+
 extern "C" void boot_osPiRawStartDma(uint8_t* rdram, recomp_context* ctx) {
     uint32_t direction = ctx->r4;
     uint32_t device_address = ctx->r5;

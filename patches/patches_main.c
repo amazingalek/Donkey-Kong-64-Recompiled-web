@@ -35,7 +35,7 @@ RECOMP_PATCH void func_dk64_boot_80000450(s32 devAddr, s32 arg1, void* dramAddr)
     u32 size = arg1 - devAddr;
 
     //@recomp: load and map compressed address to uncompressed address
-    load_dk64_overlay(devAddr, dramAddr, arg1 - devAddr);
+    dk64_load_overlay(devAddr, dramAddr, arg1 - devAddr);
 
     osInvalDCache(dramAddr, size);
 
@@ -161,7 +161,7 @@ RECOMP_PATCH void func_global_asm_80600674(void) {
         if (object_timer > 10) {
             while (D_global_asm_8076AF10 + D_global_asm_80744478 > osdata->frame_count) {
                 //@recomp: yield so this progresses correctly
-                yield_self();
+                dk64_yield_self();
             }
         }
         D_global_asm_8076AF10 = osdata->frame_count;
