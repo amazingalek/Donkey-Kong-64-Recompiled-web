@@ -83,7 +83,7 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 
 ## The web page
 
-This fork's `web` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
+This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
 commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
 game a page. Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
