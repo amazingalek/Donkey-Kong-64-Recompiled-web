@@ -86,7 +86,7 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
 commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
-game a page. Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
+game a page (v0.11.0 here). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
 frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
 (`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
 there, so the photo would show whatever the memory last held. In Chrome the readback makes every display list wait
@@ -123,3 +123,9 @@ and must be cross-origin isolated: serve the folder with `Cross-Origin-Opener-Po
 `Cross-Origin-Embedder-Policy: require-corp`, or on a host that can't set headers, as is, and `coi_serviceworker.js`
 sets them after one reload. The player picks their ROM (the plain one, not the decompressed one) in the launcher; it,
 the settings and the saves are kept in the browser's IndexedDB for that origin.
+
+Before the game passes its first frame, the page builds every shader in `src/rt64_shaders.txt` (311, specialized
+when the page is built) under a "Preparing graphics" bar, so no scene waits on a shader or draws with the slow
+ubershader meanwhile. In Chrome that takes about 40 seconds on a desktop GPU, on every visit: Chrome's pipeline cache
+can't hold them. Firefox builds none and skips it. To add shaders the list misses, open the page with
+`?record-shaders`, play, and add the `rt64 shader:` lines the console prints that the list doesn't have yet.

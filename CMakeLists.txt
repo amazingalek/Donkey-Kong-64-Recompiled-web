@@ -51,6 +51,9 @@ if (EMSCRIPTEN)
     add_link_options(-pthread -fwasm-exceptions)
     # ccache when it is on PATH, for shorter builds (BUILDING.md, "The web page"); before rt64 and the runtime are added.
     include(${CMAKE_SOURCE_DIR}/lib/N64Recomp-browser/frontend/build_speed.cmake)
+    # The shaders the page specializes at build time and builds before the game starts (src/rt64_shaders.txt says
+    # why and how it was recorded); before rt64 is added.
+    set(RT64_PREBUILT_SHADER_LIST ${CMAKE_SOURCE_DIR}/src/rt64_shaders.txt)
 endif()
 
 # Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
@@ -373,7 +376,8 @@ else()
             set(SPIRVCROSS "DYLD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/spirv-cross/lib/arm64" "${PROJECT_SOURCE_DIR}/lib/rt64//src/contrib/spirv-cross/bin/x64/spirv-cross")
         endif()
     else()
-        if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
+        # The host's processor, not the target's: for the page that is wasm32, which picked the arm64 binary.
+        if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
             set (DXC "LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/x64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxc-linux")
         else()
             set (DXC "LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/arm64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/arm64/dxc-linux")
