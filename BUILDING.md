@@ -125,11 +125,13 @@ and must be cross-origin isolated: serve the folder with `Cross-Origin-Opener-Po
 sets them after one reload. The player picks their ROM (the plain one, not the decompressed one) in the launcher; it,
 the settings and the saves are kept in the browser's IndexedDB for that origin.
 
-Before the game passes its first frame, the page builds every shader in `src/rt64_shaders.txt` (311, specialized
-and run through `spirv-opt` when the page is built, 245 pipelines) under a "Preparing graphics" panel, in every
-browser, so no scene waits on a shader or draws with the slow ubershader meanwhile. The list has no sections, so all
-of it is built before the game starts. In headless Chrome on an RTX 2070 that took 9.6 s on a first visit and 5.2 s
-on the next (Chrome's pipeline cache, 6 MB for every site, holds part of them). A shader the list misses is built
-behind the game, and the page remembers it and builds it with the rest on the next visit. To add shaders to the list,
-open the page with `?record-shaders`, play, and add the `rt64 shader:` lines the console prints that the list doesn't
-have yet.
+The page builds the shaders the game draws with from `src/rt64_shaders.txt`, specialized and run through `spirv-opt`
+when the page is built, so no scene draws with the slow ubershader. The list is in sections: before the game passes
+its first frame, under a "Preparing graphics" panel, the page builds section 0 (115 pipelines: the logos, the DK Rap,
+a moment of DK TV, the title and the menus, which every visit draws), and each other section (the new game's opening,
+Training Grounds and DK's house, DK Isles, and a world each with its lobby) when the game first draws with its
+shaders, the game waiting. In headless Chrome on an RTX 2070 section 0 took
+5.4 s on a first visit and 0.3 s on the next, and a world 1-3.5 s on its first visit (2026-10-13). A shader the list
+misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
+record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
+says how): it takes about half an hour, and then the page is built again with the new list.

@@ -196,6 +196,7 @@ void fixMPBoundary(s16 *addr, s32 target, s32 grace) {
 }
 
 extern void clear_actor_interpolation_lockdowns(void);
+void shader_survey_frame(void);
 RECOMP_PATCH void func_global_asm_805FBFF4(s32 arg0) {
     s32 phi_s4;
     OSMesg* sp38;
@@ -306,6 +307,8 @@ RECOMP_PATCH void func_global_asm_805FBFF4(s32 arg0) {
 
         // @recomp: Fire per-frame event.
         dk64recomp_every_frame();
+        // @recomp: the shader survey (shader_survey.c), which does nothing unless a script asks.
+        shader_survey_frame();
         // @recomp Run Ui Callbacks
         recomp_run_ui_callbacks();
         if (D_global_asm_8076A0B1 & 1 && !D_global_asm_8076A0B2) {
