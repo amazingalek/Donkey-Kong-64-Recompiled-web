@@ -86,7 +86,7 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
 commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
-game a page (v0.11.0 here). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
+game a page (e03236f here, after v0.18.0). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
 frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
 (`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
 there, so the photo would show whatever the memory last held. In Chrome the readback makes every display list wait
@@ -97,7 +97,8 @@ does either way.
 Do steps 1 to 4 with the N64Recomp in `lib/N64ModernRuntime/N64Recomp` (the web fork's: its `funcs.h` declares every
 function the generated code calls, which a WebAssembly build needs); the generated code is the same for both builds.
 Then, with the Emscripten SDK installed and activated and [naga](https://github.com/gfx-rs/wgpu/tree/trunk/naga)
-installed (`cargo install naga-cli`):
+installed (`cargo install naga-cli`), and `spirv-opt` on `PATH` (SPIRV-Tools, `apt install spirv-tools`; without it
+the prebuilt shaders below come out several times the size):
 
 ```bash
 embuilder build sdl2-mt freetype-legacysjlj      # once
@@ -125,7 +126,10 @@ sets them after one reload. The player picks their ROM (the plain one, not the d
 the settings and the saves are kept in the browser's IndexedDB for that origin.
 
 Before the game passes its first frame, the page builds every shader in `src/rt64_shaders.txt` (311, specialized
-when the page is built) under a "Preparing graphics" bar, so no scene waits on a shader or draws with the slow
-ubershader meanwhile. In Chrome that takes about 40 seconds on a desktop GPU, on every visit: Chrome's pipeline cache
-can't hold them. Firefox builds none and skips it. To add shaders the list misses, open the page with
-`?record-shaders`, play, and add the `rt64 shader:` lines the console prints that the list doesn't have yet.
+and run through `spirv-opt` when the page is built, 245 pipelines) under a "Preparing graphics" panel, in every
+browser, so no scene waits on a shader or draws with the slow ubershader meanwhile. The list has no sections, so all
+of it is built before the game starts. In headless Chrome on an RTX 2070 that took 9.6 s on a first visit and 5.2 s
+on the next (Chrome's pipeline cache, 6 MB for every site, holds part of them). A shader the list misses is built
+behind the game, and the page remembers it and builds it with the rest on the next visit. To add shaders to the list,
+open the page with `?record-shaders`, play, and add the `rt64 shader:` lines the console prints that the list doesn't
+have yet.
