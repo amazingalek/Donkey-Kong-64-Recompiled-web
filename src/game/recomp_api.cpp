@@ -466,9 +466,10 @@ extern "C" void load_dk64_overlay(uint32_t compressed_rom, int32_t ram_addr, uin
 }
 
 // The patches' natives (patches/syms.ld). A patch calls a native as it calls a recompiled function, with rdram and
-// the MIPS registers, so these take that and pass on the arguments. The patches called load_dk64_overlay and
-// ultramodern's yield_self directly before: x86 let that through (yield_self ignored the extra argument, and
-// load_dk64_overlay was handed two pointers for three numbers and loaded nothing), and WebAssembly traps on it.
+// the MIPS registers, so these take that and pass on the arguments. A patch calling load_dk64_overlay or
+// ultramodern's yield_self directly passes the wrong arguments: x86 lets that through (yield_self ignores the extra
+// argument, and load_dk64_overlay is handed two pointers for three numbers and loads nothing), and WebAssembly traps
+// on it.
 extern "C" void dk64_load_overlay(uint8_t* rdram, recomp_context* ctx) {
     load_dk64_overlay(_arg<0, uint32_t>(rdram, ctx), _arg<1, int32_t>(rdram, ctx), _arg<2, uint32_t>(rdram, ctx));
 }

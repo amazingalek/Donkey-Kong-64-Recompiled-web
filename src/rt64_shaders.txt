@@ -10,7 +10,7 @@
 # Quit Game. Most of them came from the DK Rap; the DK TV demos and the last minutes of play added none. Not yet:
 # DK Isles, Jungle Japes or any level played by hand, the other Kongs, bosses, bonus barrels and minigames, Kong
 # Battle (multiplayer, off by default and needing a second controller). A description missing here draws with the
-# ubershader until its shader is built, as before. Flags follow settings (filtering, HDR, MSAA, upscaling), so a
+# ubershader until its shader is built. Flags follow settings (filtering, HDR, MSAA, upscaling), so a
 # change to one of those defaults means recording again.
 00000000 00080c0f fcffffff fffcf279 0803540b
 00000000 00080cff fcffffff fffcf279 0003540b

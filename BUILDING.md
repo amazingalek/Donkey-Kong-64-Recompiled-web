@@ -112,7 +112,7 @@ shorter:
 
 - [ccache](https://ccache.dev) on `PATH` when you configure. Every compile then goes through it, so a new build dir,
   or another checkout of this repo with its build dir in the same place, compiles nothing that was compiled before:
-  a second, fresh build dir took 8 minutes instead of 35 on a busy machine, most of it the link. Keep the build dir
+  a second, fresh build dir took 8 minutes instead of 35, most of it the link. Keep the build dir
   inside the checkout (`build-web`): from one outside it, about half the files miss. The cache is per user, so it also
   serves other recomps built on the same web support.
 - `-DN64RECOMP_BROWSER_FAST_LINK=ON` when you only want to try something. The link then takes seconds instead of
