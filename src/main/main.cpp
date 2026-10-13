@@ -115,7 +115,9 @@ private:
 std::unique_ptr<ultramodern::renderer::RendererContext> create_pacing_render_context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
     auto presentation_mode = ultramodern::renderer::PresentationMode::PresentEarly;
     // Render to RAM stays on (RT64's default), on the web page too, where its readback costs every display list:
-    // a Banana Fairy photo is copied out of the frame in RDRAM by the CPU (func_global_asm_806FFF88).
+    // a Banana Fairy photo is copied out of the frame in RDRAM by the CPU (func_global_asm_806FFF88). Its copy a list
+    // late (set_render_to_ram_late) is off: the photo comes out fine with it, but the boot reuses the memory of
+    // framebuffers whose copy is still pending, and a copy landing on it crashed the audio microcode (BUILDING.md).
     auto render_context = recompui::renderer::create_render_context(rdram, window_handle, presentation_mode, developer_mode);
     return std::make_unique<PacingRendererContext>(std::move(render_context));
 }

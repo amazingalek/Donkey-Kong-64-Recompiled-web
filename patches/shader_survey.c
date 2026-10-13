@@ -16,6 +16,9 @@
 // - Anywhere else (the DK Rap, DK TV, the main menu) the game is started on file 3 as the file select's Start does
 //   (func_global_asm_807144B8), but into the map asked for, so whatever plays on a first visit plays. File 1 is left
 //   to the plan's new game, which goes through the menus as a player does.
+// A nonzero `film`, written in adventure mode, gives the player the Banana Fairy camera (Z and C-down, then B takes
+// a photo) and that much film, so a script can photograph a fairy: the photo is a patch of the frame the CPU copies
+// out of RDRAM (func_global_asm_806FFF88), which is what render to RAM is kept on for.
 
 void func_global_asm_806C9AE0(void);
 void func_global_asm_80731030(void); // clearTemporaryFlags()
@@ -29,6 +32,8 @@ extern Maps current_map;
 extern u8 current_character_index[];
 extern u8 game_mode;
 extern u8 game_mode_copy;
+extern u8 D_global_asm_807FC950[]; // PlayerProgress[4], player 1's film at 0x2F8
+void setFlag(s16 flagIndex, u8 newValue, u8 flagType);
 
 struct ShaderSurvey {
     u32 magic[2];
@@ -38,15 +43,21 @@ struct ShaderSurvey {
     volatile s32 kong;
     volatile s32 current_map;
     volatile s32 game_mode;
+    volatile s32 film;
 };
 
-struct ShaderSurvey shader_survey = { { 0x53484452, 0x53525659 }, 0, -1, 0, -1, -1, -1 }; // "SHDR" "SRVY"
+struct ShaderSurvey shader_survey = { { 0x53484452, 0x53525659 }, 0, -1, 0, -1, -1, -1, 0 }; // "SHDR" "SRVY"
 
 void shader_survey_frame(void) {
     s32 map, exit, kong;
 
     shader_survey.current_map = current_map;
     shader_survey.game_mode = game_mode_copy;
+    if ((shader_survey.film > 0) && (game_mode_copy == GAME_MODE_ADVENTURE)) {
+        setFlag(0x179, TRUE, FLAG_TYPE_PERMANENT); // PERMFLAG_ITEM_MOVE_SHOCKWAVE_CAMERA
+        *(u16 *)(D_global_asm_807FC950 + 0x2F8) = shader_survey.film;
+        shader_survey.film = 0;
+    }
     // Not while the game is changing modes, and in the logos only the main menu and the DK Rap, once the logos have
     // run 3 seconds, when Start would skip them (before that, the main menu faults).
     if ((shader_survey.map < 0) || (game_mode != game_mode_copy)) {

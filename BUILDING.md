@@ -86,11 +86,18 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
 commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
-game a page (e03236f here, after v0.18.0). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
+game a page (v0.23.0 here). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
 frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
 (`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
-there, so the photo would show whatever the memory last held. In Chrome the readback makes every display list wait
-for the GPU process (5-6 ms a list, measured on another game). The game's other uses of a frame, the snapshots in
+there, so the photo would show whatever the memory last held. In headless Chrome on an RTX 2070 a list walking about DK
+Isles takes 6-7 ms with it, most of that waiting for the GPU process to hand the frame back. RT64 can copy the frame
+into RDRAM a list late instead (`recompui::renderer::set_render_to_ram_late`), and the list then takes about 2 ms,
+but the page doesn't: in the boot the game reuses the memory of framebuffers it has just drawn while their copy is
+still pending, the copy lands on what the game wrote there, and 2 of about 26 boots with it crashed at once in the
+audio microcode (`Unhandled jump target in microcode n_aspMain`), none of about 12 with the exact copy. The photo
+itself came out right with it, from a list or two earlier while the camera turned. `patches/shader_survey.c` gives
+the camera and film on request (its `film`), which is how that was checked by script: warp to a map, Z then C-down,
+then B. The game's other uses of a frame, the snapshots in
 transitions (`func_global_asm_8070A848`, patched in `patches/patches_framebuffer.c`), copy it on the GPU, which RT64
 does either way.
 
