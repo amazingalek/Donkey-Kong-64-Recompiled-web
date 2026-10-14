@@ -152,19 +152,21 @@ sets them after one reload. The player picks their ROM (the plain one, not the d
 the settings and the saves are kept in the browser's IndexedDB for that origin.
 
 The page builds the shaders the game draws with from `src/rt64_shaders.txt`, specialized and run through `spirv-opt`
-when the page is built, so no scene draws with the slow ubershader. The list is in sections: before the game passes
-its first frame, under a "Preparing graphics" panel, the page builds section 0 (115 pipelines: the logos, the DK Rap,
-a moment of DK TV, the title and the menus, which every visit draws), and each other section (the new game's opening,
-Training Grounds and DK's house, DK Isles, and a world each with its lobby) when the game first draws with its
-shaders, the game waiting. In headless Chrome on an RTX 2070 section 0 took
-5.4 s on a first visit and 0.3 s on the next, and a world 1-3.5 s on its first visit (2026-10-13).
-Firefox 157 builds them one at a time and keeps none between visits: section 0 took 15-17 s on every visit there,
-and Frantic Factory's 3.6 s. A shader the list
+when the page is built, so no scene draws with the slow ubershader. The list is in sections: section 0 (115 pipelines: the logos, the DK Rap, a moment of DK TV, the title and the menus,
+which every visit draws), then the new game's opening, Training Grounds and DK's house, DK Isles, and a world each with
+its lobby. In Chrome the whole list is built behind the game from its first frame, section 0 first on half the host's
+cores and then the rest one at a time, a section the game has reached moved to the front, and the game waits only when
+a frame wants 4 or more of a section's shaders that aren't built yet, under a small "Preparing graphics" indicator in a
+corner. Firefox builds a pipeline in line with the rest of its GPU work, so there section 0 is built before the game
+passes its first frame and each other section when the game first draws with its shaders, the game waiting, and it
+keeps none between visits: section 0 took 15-17 s on every visit, and Frantic Factory's 3.6 s (Firefox 157). A shader the list
 misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
 says how): it takes about half an hour, and then the page is built again with the new list.
 
-Played from the published page (main 9341ea7) on 2026-10-14 (RTX 2070, a busy host): the launcher, Load ROM, the DK Rap, a new
-game's opening and DK walking in his house, with sound and no WebGPU errors. Section 0 took 4.8 s in headless Chrome
-155 and 15.1 s in Firefox 158, the opening's 1.4 s and 3.2 s, and in the house Chrome drew 51 frames a second and
-Firefox 60.
+Played from the published page (main f3b9e06, N64Recomp-browser v0.28.0) on 2026-10-14 (RTX 2070, a busy host): the
+launcher, Load ROM and the DK Rap in both browsers, and Frantic Factory reached by `tools/shader_plan.json` in Chrome,
+with sound and no WebGPU errors. On a first visit headless Chrome 155 never waited, where it had waited 4.8-5.4 s for
+section 0 and 0.9-1.0 s for the Factory before v0.27.0, but the DK Rap drew 18-31 frames a second for about 20 s while
+section 0 built behind it, then 54-56; the whole list was built about 50 s after the page opened, before the plan
+reached the Factory. Firefox 158 waited 17.3 s for section 0, the GPU busy with other work, and then drew 60.
