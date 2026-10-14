@@ -86,7 +86,7 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
 commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
-game a page (v0.23.0 here). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
+game a page (v0.24.0 here). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
 frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
 (`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
 there, so the photo would show whatever the memory last held. In headless Chrome on an RTX 2070 a list walking about DK
