@@ -183,3 +183,7 @@ Played again from the page built on N64Recomp-browser ed8764a (v0.36.0, main b0f
 an idle host, one page at a time, 90 s: Firefox 158 waited 12.6 s for the boot's 115 and then drew 57-61 throughout,
 rt64's pacing never on (it judges drops over a whole 2 s of presents now, not the first few after the wait); Chrome
 155 never waited and drew 53-56; neither was short of sound.
+
+Played again from the page built on N64Recomp-browser 2efc795 (rt64-web 9ed449d, main 2a6532e) on 2026-10-14, on that
+canvas, a quiet host, one page at a time, 25 s after the waits: Firefox 158 waited 16.1 s for the boot's 115 and
+then drew 59-60, Chrome 155 never waited and drew 56-60, rt64's pacing never on, no sound short, no WebGPU errors.
