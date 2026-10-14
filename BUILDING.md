@@ -173,3 +173,8 @@ Factory, and then drew 60. On a 3840x2000 canvas, the stand-in for integrated gr
 52-56; Firefox waited 12.5-13.7 s and then drew 58-62 in one run, and in another, alone on the GPU, presented 30-107 a
 second, the GPU's memory up 3.8 GB as the wait ended: Firefox's animation frames come in bursts there, which the page
 reads as a faster display.
+
+Played again from the page built on N64Recomp-browser b1c35d1 (main a13c6d7) on 2026-10-14, on that canvas, an idle host,
+one page at a time: Firefox 158 waited 12.9 s for the boot's 115, then rt64's pacing switched on 0.6 s after the wait
+and held it at the game's 30 frames a second for the next 70 s, the GPU's memory up 2 GB as the wait ended and flat
+after; Chrome 155 never waited and drew 55-56; neither was short of sound.
