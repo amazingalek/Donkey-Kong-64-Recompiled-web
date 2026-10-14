@@ -163,3 +163,8 @@ and Frantic Factory's 3.6 s. A shader the list
 misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
 says how): it takes about half an hour, and then the page is built again with the new list.
+
+Played from the published page (main 9341ea7) on 2026-10-14 (RTX 2070, a busy host): the launcher, Load ROM, the DK Rap, a new
+game's opening and DK walking in his house, with sound and no WebGPU errors. Section 0 took 4.8 s in headless Chrome
+155 and 15.1 s in Firefox 158, the opening's 1.4 s and 3.2 s, and in the house Chrome drew 51 frames a second and
+Firefox 60.
