@@ -164,9 +164,10 @@ misses is built behind the game, and the page remembers it and builds it with it
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
 says how): it takes about half an hour, and then the page is built again with the new list.
 
-Played from the published page (main f3b9e06, N64Recomp-browser v0.28.0) on 2026-10-14 (RTX 2070, a busy host): the
-launcher, Load ROM and the DK Rap in both browsers, and Frantic Factory reached by `tools/shader_plan.json` in Chrome,
-with sound and no WebGPU errors. On a first visit headless Chrome 155 never waited, where it had waited 4.8-5.4 s for
-section 0 and 0.9-1.0 s for the Factory before v0.27.0, but the DK Rap drew 18-31 frames a second for about 20 s while
-section 0 built behind it, then 54-56; the whole list was built about 50 s after the page opened, before the plan
-reached the Factory. Firefox 158 waited 17.3 s for section 0, the GPU busy with other work, and then drew 60.
+Played from the published page (main 72f4d46, N64Recomp-browser 7b80155) on 2026-10-14 (RTX 2070, an idle host), by
+`tools/shader_plan.json` with N64Recomp-browser's `tools/play_page.mjs`: the launcher, Load ROM, the DK Rap and
+Frantic Factory in both browsers, with sound and no WebGPU errors. On a first visit a local build of the same commit
+in headless Chrome 155 never waited and drew 49-57 frames a second, where on v0.28.0 the DK Rap drew 18-31 for about
+20 s while section 0 built behind it. Firefox 158 waited 12.5 s for section 0 (17.3 s on v0.28.0) and 2.3 s for the
+Factory, and then drew 60. On a 3840x2000 canvas, the stand-in for integrated graphics, Chrome never waited and drew
+52-56; Firefox waited 13.7 s and then drew 58-62, where it held 30 for spells before.
