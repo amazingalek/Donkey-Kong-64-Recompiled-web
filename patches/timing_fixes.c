@@ -228,7 +228,8 @@ extern void *D_global_asm_80744470[];
 extern OSScTask* D_global_asm_807F04E0;
 extern void func_global_asm_8060FAA4(OSMesgQueue *arg0, OSMesg arg1, s32 arg2);
 extern OSTimer D_global_asm_807F0540;
-extern void func_global_asm_8060F928(Struct131B0_2 *arg0, Struct131B0_1 *arg1); 
+extern void func_global_asm_8060F928(Struct131B0_2 *arg0, Struct131B0_1 *arg1);
+extern void func_global_asm_8060F208(Struct131B0_2 *arg0);
 
 static s16 D_global_asm_80746858_copy = 0;
 
@@ -317,6 +318,16 @@ RECOMP_PATCH void func_global_asm_8060F254(Struct131B0_2* arg0) {
         if (audioQueue->validCount == 0) {
             osSendMesg(audioQueue, (void*)5, OS_MESG_NOBLOCK);
         }
+        /*
+            @recomp: and start the pending audio task here (or have the running graphics task yield to it), as the
+            audio thread's 0x29E would. The thread asks for that only when it takes a 5 with its task already in
+            unk264, then builds the next frame and waits for the task. A 5 that arrived while it waited (the graphics
+            thread slow to take a task, which the RSP then looks busy with: the web page waiting for shaders) is
+            taken at the top of the next round, before the new task has reached unk264, so it asks for nothing, waits
+            for a task nobody starts, and with that 5 never taken no other is sent: silence for good. Starting the
+            task here can't strand it, and the thread's own 0x29E then finds unk264 empty or the task running.
+        */
+        func_global_asm_8060F208(arg0);
     }
     
     for (temp_v0_3 = arg0->unk260; temp_v0_3 != NULL; temp_v0_3 = temp_v0_3->next) {
