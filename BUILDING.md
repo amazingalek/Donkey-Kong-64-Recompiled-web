@@ -138,7 +138,9 @@ its first frame, under a "Preparing graphics" panel, the page builds section 0 (
 a moment of DK TV, the title and the menus, which every visit draws), and each other section (the new game's opening,
 Training Grounds and DK's house, DK Isles, and a world each with its lobby) when the game first draws with its
 shaders, the game waiting. In headless Chrome on an RTX 2070 section 0 took
-5.4 s on a first visit and 0.3 s on the next, and a world 1-3.5 s on its first visit (2026-10-13). A shader the list
+5.4 s on a first visit and 0.3 s on the next, and a world 1-3.5 s on its first visit (2026-10-13).
+Firefox 157 builds them one at a time and keeps none between visits: section 0 took 15-17 s on every visit there,
+and Frantic Factory's 3.6 s. A shader the list
 misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
 says how): it takes about half an hour, and then the page is built again with the new list.
