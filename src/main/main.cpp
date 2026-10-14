@@ -481,7 +481,7 @@ std::vector<recomp::GameEntry> supported_games = {
         .game_id = u8"DK64",
         .mod_game_id = "dk64",
 #ifndef __EMSCRIPTEN__
-        // The web fork's runtime has no mod store: mods are off on the page.
+        // No mod store on the page, where mods are off (web/curl/FindCURL.cmake).
         .discovery_url = "https://dk64recomp.com/mods.json",
 #endif
         // Eep16k instead of Eep4k to have room for extra save file data.
@@ -921,11 +921,8 @@ int main(int argc, char** argv) {
     recomp::mods::register_mod_container_type("rtz", std::vector{ texture_pack_content_type_id }, false);
 
     recomp::Configuration cfg {
-#ifndef __EMSCRIPTEN__
-        // --game and --game-mode; the web forks' runtime predates them, and a page has no command line to pass.
         .argc = argc,
         .argv = argv,
-#endif
         .project_version = project_version,
         .window_handle = {},
         .rsp_callbacks = rsp_callbacks,

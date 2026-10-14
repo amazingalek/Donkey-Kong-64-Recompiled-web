@@ -42,6 +42,13 @@ endif()
 # With Emscripten (emcmake cmake), the game builds as a page for a browser, DK64Recompiled.html, through
 # lib/N64Recomp-browser/frontend: RT64 and the menus on WebGPU, mods off (BUILDING.md, "The web page").
 if (EMSCRIPTEN)
+    # lib/rt64, lib/N64ModernRuntime and lib/RecompFrontend with N64Recomp-browser's web support patched in, if
+    # BUILDING.md's step hasn't already.
+    include(${CMAKE_SOURCE_DIR}/lib/N64Recomp-browser/patches/apply.cmake)
+    n64recomp_browser_apply_patches(${CMAKE_SOURCE_DIR}/lib)
+    # RecompFrontend's mod store wants curl, which the page hasn't got: web/curl stands in for it (FindCURL.cmake there
+    # says why that is enough).
+    list(PREPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/web/curl)
     # Threads are pthreads (SharedArrayBuffer), and the runtime ends a game thread by throwing. -msimd128 is wasm SIMD,
     # which every browser with WebGPU has.
     add_compile_options(-pthread -fwasm-exceptions -msimd128)

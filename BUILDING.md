@@ -84,9 +84,12 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 ## The web page
 
 This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
-that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are the web forks at the
-commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s `forks.txt` names, and `lib/N64Recomp-browser` makes the
-game a page (v0.24.0 here). Mods and the mod store are off on the page. RT64's render to RAM stays on, as the game reads its own
+that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are Donkey Kong 64:
+Recompiled's own, at the same commits (its mod store and `--game` included), and
+[N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser) (`lib/N64Recomp-browser`) patches their checkouts
+with the web support and makes the game a page. The patches change nothing in the desktop build. Mods and the mod store
+are off on the page: the store fetches with curl, which a browser hasn't got, so `web/curl` stands in for it there
+and nothing reaches it. RT64's render to RAM stays on, as the game reads its own
 frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
 (`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
 there, so the photo would show whatever the memory last held. In headless Chrome on an RTX 2070 a list walking about DK
@@ -101,9 +104,16 @@ then B. The game's other uses of a frame, the snapshots in
 transitions (`func_global_asm_8070A848`, patched in `patches/patches_framebuffer.c`), copy it on the GPU, which RT64
 does either way.
 
-Do steps 1 to 4 with the N64Recomp in `lib/N64ModernRuntime/N64Recomp` (the web fork's: its `funcs.h` declares every
-function the generated code calls, which a WebAssembly build needs); the generated code is the same for both builds.
-Then, with the Emscripten SDK installed and activated and [naga](https://github.com/gfx-rs/wgpu/tree/trunk/naga)
+With steps 1 to 3 done, patch the submodules:
+
+```bash
+cmake -P lib/N64Recomp-browser/patches/apply.cmake lib
+```
+
+`lib/RecompFrontend` takes its patch with a three-way merge, which fetches the upstream commit the patch was made on
+from N64Recomp-browser's fork of it. Then step 4, with the N64Recomp built from the patched
+`lib/N64ModernRuntime/N64Recomp` (its `funcs.h` declares every function the generated code calls, which a WebAssembly
+build needs); the generated code is the same for both builds. Then, with the Emscripten SDK installed and activated and [naga](https://github.com/gfx-rs/wgpu/tree/trunk/naga)
 installed (`cargo install naga-cli`), and `spirv-opt` on `PATH` (SPIRV-Tools, `apt install spirv-tools`; without it
 the prebuilt shaders below come out several times the size):
 
@@ -125,7 +135,7 @@ shorter:
 - `-DN64RECOMP_BROWSER_FAST_LINK=ON` when you only want to try something. The link then takes seconds instead of
   minutes, because it skips Binaryen's optimization of the whole program. Leave it off for a page that people play.
 
-vcpkg isn't needed for the page: it brings curl, for the mod store. `build-web` then holds `DK64Recompiled.html`,
+vcpkg isn't needed for the page: it brings curl, for the mod store, which `web/curl` stands in for. `build-web` then holds `DK64Recompiled.html`,
 `.js`, `.wasm`, `.data` and `coi_serviceworker.js`. The page needs a browser with WebGPU (Chrome or Edge 113 and up)
 and must be cross-origin isolated: serve the folder with `Cross-Origin-Opener-Policy: same-origin` and
 `Cross-Origin-Embedder-Policy: require-corp`, or on a host that can't set headers, as is, and `coi_serviceworker.js`
