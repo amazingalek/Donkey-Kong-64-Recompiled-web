@@ -104,6 +104,15 @@ then B. The game's other uses of a frame, the snapshots in
 transitions (`func_global_asm_8070A848`, patched in `patches/patches_framebuffer.c`), copy it on the GPU, which RT64
 does either way.
 
+The game's sound once went silent for good on the page, a second or three after the boot began, in 5 of 7 boots in
+headless Chrome. Chrome holds the graphics thread for the boot's prebuilt shaders, about 5 s. Meanwhile the scheduler
+sees the RSP busy with the graphics task it started, so the audio task waits, and a retrace's message to the audio
+thread lands while the thread waits for that task. The thread takes that message at the top of its next round, before
+its new task is queued, and so asks the scheduler for nothing. It then waits for a task nobody starts, and with the
+message never taken no other is sent. Now the retrace handler (`patches/timing_fixes.c`) starts a pending audio task
+itself, as the thread's own request would, and all 9 boots with it played on. Firefox runs the game through the wait,
+and 3 boots without the fix kept their sound.
+
 With steps 1 to 3 done, patch the submodules:
 
 ```bash
