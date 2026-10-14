@@ -170,4 +170,6 @@ Frantic Factory in both browsers, with sound and no WebGPU errors. On a first vi
 in headless Chrome 155 never waited and drew 49-57 frames a second, where on v0.28.0 the DK Rap drew 18-31 for about
 20 s while section 0 built behind it. Firefox 158 waited 12.5 s for section 0 (17.3 s on v0.28.0) and 2.3 s for the
 Factory, and then drew 60. On a 3840x2000 canvas, the stand-in for integrated graphics, Chrome never waited and drew
-52-56; Firefox waited 13.7 s and then drew 58-62, where it held 30 for spells before.
+52-56; Firefox waited 12.5-13.7 s and then drew 58-62 in one run, and in another, alone on the GPU, presented 30-107 a
+second, the GPU's memory up 3.8 GB as the wait ended: Firefox's animation frames come in bursts there, which the page
+reads as a faster display.
