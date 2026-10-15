@@ -227,3 +227,9 @@ profile each, a host ~30% busy, by `tools/shader_plan.json`'s `isles` section tw
 Chrome 155 never waited and drew 58.7 presents a second (median), Firefox 158 waited 29.9 s for the boot's 115 and 7 s
 for DK Isles' 74 and drew 58.6. Sound short only in Chrome's first seconds (396 frames), no WebGPU errors; Firefox's
 one exception was the first visit's load cut off by `coi_serviceworker.js`'s reload.
+
+The same page in Firefox 158 on 2026-10-15, RTX 2070, a fresh profile each, a host ~20% busy, by `tools/shader_plan.json`'s
+start and then the game by itself: with `onSubmittedWorkDone` held back 100 ms by a preload (the laptop's late reports;
+1256x645, 40 s) it booted, waited 17.4 s for the boot's 115 and drew 18.8 presents a second, which the hold caps, with
+no sound short, no WebGPU errors and no exception after the first load's; at 3840x2000, the stand-in for a laptop's
+integrated graphics (25 s, no hold), it waited 17.4 s and drew 59.6, no sound short.
