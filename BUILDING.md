@@ -204,3 +204,10 @@ seconds behind; they kept landing after Start, on the game's code and audio micr
 with `onSubmittedWorkDone` held back 100 ms by a preload (a stand-in for that laptop), the published page failed the
 same way, at the same wasm offset, in three boots of three; with RecompFrontend-web 75fe596, which keeps the dummy
 frame out of RDRAM, a local build waited 15 s for the boot's shaders and played into the Factory.
+
+Played again from the page built on N64Recomp-browser d3b9031 (N64ModernRuntime-web f0e0884, RecompFrontend-web 75fe596,
+rt64-web f34b19c; main ed643af, gh-pages 1c20bcc) on 2026-10-15, its files served locally with the cross-origin headers,
+RTX 2070, 1256x645, a fresh profile each, the host's every core busy with other work, by `tools/shader_plan.json`'s
+start and then 40 s with `play_page.mjs`: headless Chrome 155 never waited and drew 59.6 presents a second (median),
+Firefox 158 waited 15.9 s for the boot's 115 and then drew 59.5. No sound short, no WebGPU errors or exceptions in
+either.
