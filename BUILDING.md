@@ -158,14 +158,19 @@ sets them after one reload. The player picks their ROM (the plain one, not the d
 the settings and the saves are kept in the browser's IndexedDB for that origin.
 
 The page builds the shaders the game draws with from `src/rt64_shaders.txt`, specialized and run through `spirv-opt`
-when the page is built, so no scene draws with the slow ubershader. The list is in sections: section 0 (115 pipelines: the logos, the DK Rap, a moment of DK TV, the title and the menus,
-which every visit draws), then the new game's opening, Training Grounds and DK's house, DK Isles, and a world each with
-its lobby. In Chrome the whole list is built behind the game from its first frame, section 0 first on half the host's
-cores and then the rest one at a time, a section the game has reached moved to the front, and the game waits only when
-a frame wants 4 or more of a section's shaders that aren't built yet, under a small "Preparing graphics" indicator in a
-corner. Firefox builds a pipeline in line with the rest of its GPU work, so there section 0 is built before the game
-passes its first frame and each other section when the game first draws with its shaders, the game waiting, and it
-keeps none between visits: section 0 took 15-17 s on every visit, and Frantic Factory's 3.6 s (Firefox 157). A shader the list
+when the page is built, so no scene draws with the slow ubershader. The list is in 15 sections, 475 descriptions and
+361 pipelines: section 0, the logos (10 pipelines), then the DK Rap (49), which every visit reaches (Start in the logos
+goes to it) and whose first frame wants 31 of its shaders at once, then the menus (55: a moment of DK TV's Jungle Japes
+demo, the title, the main menu and its screens), then the new game's opening, Training Grounds and DK's house, DK
+Isles, and a world each with its lobby. In Chrome the whole list is built behind the game from its first frame,
+sections 0 and 1 first on half the host's cores and then the rest one at a time, a section the game has reached moved
+to the front, and the game waits only when a frame wants 4 or more of a section's shaders that aren't built yet, under
+a small "Preparing graphics" indicator in a corner. Firefox builds a pipeline in line with the rest of its GPU work, so
+there section 0 is built before the game passes its first frame and each other section when the game first draws with
+its shaders, the game waiting, and it keeps none between visits, so every visit waits as long: the logos 0.5-0.7 s,
+the DK Rap 6.3-6.5 s as it begins and the menus 4.3 s (Firefox 158), Frantic Factory 3.6 s (Firefox 157). The logos
+are a section of their own so that the page draws its first frame at once: as one section with the Rap and the menus,
+115 pipelines, Firefox waited 13-30 s before it. A shader the list
 misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
 says how): it takes about half an hour, and then the page is built again with the new list.
@@ -233,3 +238,12 @@ start and then the game by itself: with `onSubmittedWorkDone` held back 100 ms b
 1256x645, 40 s) it booted, waited 17.4 s for the boot's 115 and drew 18.8 presents a second, which the hold caps, with
 no sound short, no WebGPU errors and no exception after the first load's; at 3840x2000, the stand-in for a laptop's
 integrated graphics (25 s, no hold), it waited 17.4 s and drew 59.6, no sound short.
+
+Played from Pages with the boot's section the logos alone (main 4cc24c6, N64Recomp-browser 91c0557) on 2026-10-15,
+RTX 2070, a fresh profile each, a host ~20% busy, the game by itself after Start Game: Firefox 158 at 1256x645 waited
+0.7 s for the logos' 10 before the first frame and 6.4 s for the DK Rap's 49 as the Rap began, then drew 59.4 presents
+a second (median) for 90 s; pressing Start through the Rap to the main menu, it waited 0.5 and 6.3 s, 0.1 s for a
+single shader and 4.3 s for the menus' 55, then drew 59.6. Headless Chrome 155 never waited,
+built all 361 by 47 s in and drew 59.6. At 3840x2000, the stand-in for a laptop's integrated graphics (25 s), Firefox
+waited 0.5 and 6.5 s and drew 59.0, Chrome never waited and drew 59.6. No sound short, no WebGPU errors; Firefox's one
+exception was the first visit's load cut off by `coi_serviceworker.js`'s reload.
