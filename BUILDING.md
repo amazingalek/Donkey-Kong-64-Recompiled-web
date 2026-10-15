@@ -187,3 +187,13 @@ rt64's pacing never on (it judges drops over a whole 2 s of presents now, not th
 Played again from the page built on N64Recomp-browser 2efc795 (rt64-web 9ed449d, main 2a6532e) on 2026-10-14, on that
 canvas, a quiet host, one page at a time, 25 s after the waits: Firefox 158 waited 16.1 s for the boot's 115 and
 then drew 59-60, Chrome 155 never waited and drew 56-60, rt64's pacing never on, no sound short, no WebGPU errors.
+
+On a laptop's Intel UHD (Tiger Lake, Windows 11 in its best power efficiency mode) on 2026-10-14, from the published
+page (main 2a6532e, N64Recomp-browser 2efc795), by `tools/shader_plan.json` (`--play 90` and `--section factory`) with
+`play_page.mjs` at 1256x645, Firefox 158 and headless Chrome 155, a fresh profile each, one page at a time; presents a
+second are medians after the waits, and the RTX beside the Intel chip drew nothing. Chrome never waited and drew 30.0
+(29.9-36.3), the game's 30, and 29.9 to the Factory, reaching map 80 with its cutscene drawn right and no sound short.
+Firefox never booted, in either run: the plan's probe found no map loaded, and 22-27 s in the page logged `Failed to
+execute task type: 2` (`--play`) or `RuntimeError: index out of bounds` in the wasm (`--section factory`); nothing
+drew and the sound ran dry. The ROM was byte-swapped (.v64), which the page converts, and the same file played in
+Chrome. No WebGPU errors.
