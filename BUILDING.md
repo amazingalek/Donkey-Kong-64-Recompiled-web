@@ -221,3 +221,9 @@ to the next; main 5391696, gh-pages 90d5216) on 2026-10-15, RTX 2070, 1256x645, 
 core busy with other work, by `tools/shader_plan.json`'s `factory` section with `play_page.mjs`: headless Chrome 155
 never waited and drew 59.2 presents a second (median), Firefox 158 waited 13.3 s for the boot's 115 and 2.3 s for the
 Factory's 55 and drew 58.5. No sound short, no WebGPU errors or exceptions in either.
+
+Played from Pages with render to RAM's copy a list late (main 6a59ade, gh-pages fcf1307) on 2026-10-15, RTX 2070, 1256x645, a fresh
+profile each, a host ~30% busy, by `tools/shader_plan.json`'s `isles` section twice with `play_page.mjs`: headless
+Chrome 155 never waited and drew 58.7 presents a second (median), Firefox 158 waited 29.9 s for the boot's 115 and 7 s
+for DK Isles' 74 and drew 58.6. Sound short only in Chrome's first seconds (396 frames), no WebGPU errors; Firefox's
+one exception was the first visit's load cut off by `coi_serviceworker.js`'s reload.
