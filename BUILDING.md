@@ -95,9 +95,11 @@ frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the 
 there, so the photo would show whatever the memory last held. In headless Chrome on an RTX 2070 a list walking about DK
 Isles takes 6-7 ms with it, most of that waiting for the GPU process to hand the frame back. RT64 can copy the frame
 into RDRAM a list late instead (`recompui::renderer::set_render_to_ram_late`), and the list then takes about 2 ms,
-but the page doesn't: in the boot the game reuses the memory of framebuffers it has just drawn while their copy is
-still pending, the copy lands on what the game wrote there, and 2 of about 26 boots with it crashed at once in the
-audio microcode (`Unhandled jump target in microcode n_aspMain`), none of about 12 with the exact copy. The photo
+but the page doesn't: 2 of about 26 boots with it crashed at once in the audio microcode (`Unhandled jump target in
+microcode n_aspMain`), none of about 12 with the exact copy. That was the runtime's dummy frame, not the game's:
+before the game starts, every VI draws one into 0x80700000 or 0x80725800, where the game's main code and audio
+microcode load, and its copy a list late landed on them. RecompFrontend-web 75fe596 no longer copies the dummy frame
+to RDRAM on a page, so the late copy may be safe now, but it hasn't been tried again. The photo
 itself came out right with it, from a list or two earlier while the camera turned. `patches/shader_survey.c` gives
 the camera and film on request (its `film`), which is how that was checked by script: warp to a map, Z then C-down,
 then B. The game's other uses of a frame, the snapshots in
@@ -196,4 +198,9 @@ second are medians after the waits, and the RTX beside the Intel chip drew nothi
 Firefox never booted, in either run: the plan's probe found no map loaded, and 22-27 s in the page logged `Failed to
 execute task type: 2` (`--play`) or `RuntimeError: index out of bounds` in the wasm (`--section factory`); nothing
 drew and the sound ran dry. The ROM was byte-swapped (.v64), which the page converts, and the same file played in
-Chrome. No WebGPU errors.
+Chrome. No WebGPU errors. The ROM's byte order wasn't the cause: those were the runtime's dummy frames, drawn into
+0x80700000 every VI before the game starts and copied to RDRAM, which Firefox's late reports of finished GPU work left
+seconds behind; they kept landing after Start, on the game's code and audio microcode. In Firefox 158 on an RTX 2070,
+with `onSubmittedWorkDone` held back 100 ms by a preload (a stand-in for that laptop), the published page failed the
+same way, at the same wasm offset, in three boots of three; with RecompFrontend-web 75fe596, which keeps the dummy
+frame out of RDRAM, a local build waited 15 s for the boot's shaders and played into the Factory.
