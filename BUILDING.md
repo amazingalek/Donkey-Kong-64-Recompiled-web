@@ -92,15 +92,19 @@ are off on the page: the store fetches with curl, which a browser hasn't got, so
 and nothing reaches it. RT64's render to RAM stays on, as the game reads its own
 frames: a Banana Fairy photo is a 160x128 patch of the frame on screen that the CPU copies out of RDRAM
 (`func_global_asm_806FFF88`, patched in `patches/patches_heap.c`), and without render to RAM nothing draws the frame
-there, so the photo would show whatever the memory last held. In headless Chrome on an RTX 2070 a list walking about DK
-Isles takes 6-7 ms with it, most of that waiting for the GPU process to hand the frame back. RT64 can copy the frame
-into RDRAM a list late instead (`recompui::renderer::set_render_to_ram_late`), and the list then takes about 2 ms,
-but the page doesn't: 2 of about 26 boots with it crashed at once in the audio microcode (`Unhandled jump target in
-microcode n_aspMain`), none of about 12 with the exact copy. That was the runtime's dummy frame, not the game's:
-before the game starts, every VI draws one into 0x80700000 or 0x80725800, where the game's main code and audio
-microcode load, and its copy a list late landed on them. RecompFrontend-web 75fe596 no longer copies the dummy frame
-to RDRAM on a page, so the late copy may be safe now, but it hasn't been tried again. The photo
-itself came out right with it, from a list or two earlier while the camera turned. `patches/shader_survey.c` gives
+there, so the photo would show whatever the memory last held. On the page RT64 copies each frame into RDRAM a list
+late (`recompui::renderer::set_render_to_ram_late`): the copy lands when the next list starts, or at a VI once the GPU
+has it, so a list doesn't wait for the GPU process to hand the frame back. In headless Chrome 155 on an RTX 2070, through
+the menus and walking about DK Isles, a list takes 3.7 ms (median, two runs) against 7.8 ms with the copy made before
+the list ends. The photo then holds the frame a list or two earlier, which shows only while the camera turns. Before
+the game starts, every VI draws a dummy frame into 0x80700000 or 0x80725800, where the game's main code and audio
+microcode load; a late copy of one landed on them and crashed 2 of about 26 boots in the audio microcode (`Unhandled
+jump target in microcode n_aspMain`). RecompFrontend-web 75fe596 keeps the dummy frame out of RDRAM on a page, and
+since then none of 29 cold boots in headless Chrome 155 and 25 in Firefox 158 crashed. Most of them report one CPU
+write to a framebuffer with a copy pending (`RT64: the CPU wrote to the framebuffer at 0x00034000 ...`): the boot draws
+there, and the overlay loaded at 0x80024000 then zeroes its BSS over it. RT64 drops that copy, so the BSS keeps its
+zeroes. What it can't see is a zero written over a zero, which would get the frame, but that framebuffer's black is
+0x00010001 throughout the boot and none of its words is 0. `patches/shader_survey.c` gives
 the camera and film on request (its `film`), which is how that was checked by script: warp to a map, Z then C-down,
 then B. The game's other uses of a frame, the snapshots in
 transitions (`func_global_asm_8070A848`, patched in `patches/patches_framebuffer.c`), copy it on the GPU, which RT64

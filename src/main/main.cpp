@@ -114,10 +114,12 @@ private:
 
 std::unique_ptr<ultramodern::renderer::RendererContext> create_pacing_render_context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
     auto presentation_mode = ultramodern::renderer::PresentationMode::PresentEarly;
-    // Render to RAM stays on (RT64's default), on the web page too, where its readback costs every display list:
-    // a Banana Fairy photo is copied out of the frame in RDRAM by the CPU (func_global_asm_806FFF88). Its copy a list
-    // late (set_render_to_ram_late) is off: the photo comes out fine with it, but the runtime's dummy frames' copies
-    // landed on the game's code and crashed the audio microcode (BUILDING.md), which RecompFrontend-web 75fe596 stops.
+    // Render to RAM stays on (RT64's default), on the web page too: a Banana Fairy photo is copied out of the frame in
+    // RDRAM by the CPU (func_global_asm_806FFF88). On the page the copy lands a list late (set_render_to_ram_late), so
+    // a list doesn't wait for the readback; the photo then holds a frame a list or two older (BUILDING.md).
+#ifdef __EMSCRIPTEN__
+    recompui::renderer::set_render_to_ram_late(true);
+#endif
     auto render_context = recompui::renderer::create_render_context(rdram, window_handle, presentation_mode, developer_mode);
     return std::make_unique<PacingRendererContext>(std::move(render_context));
 }
