@@ -211,3 +211,9 @@ RTX 2070, 1256x645, a fresh profile each, the host's every core busy with other 
 start and then 40 s with `play_page.mjs`: headless Chrome 155 never waited and drew 59.6 presents a second (median),
 Firefox 158 waited 15.9 s for the boot's 115 and then drew 59.5. No sound short, no WebGPU errors or exceptions in
 either.
+
+Played again from Pages, built on N64Recomp-browser 7277a2e (rt64-web 8bea892, tile copies reused from one display list
+to the next; main 5391696, gh-pages 90d5216) on 2026-10-15, RTX 2070, 1256x645, a fresh profile each, the host's every
+core busy with other work, by `tools/shader_plan.json`'s `factory` section with `play_page.mjs`: headless Chrome 155
+never waited and drew 59.2 presents a second (median), Firefox 158 waited 13.3 s for the boot's 115 and 2.3 s for the
+Factory's 55 and drew 58.5. No sound short, no WebGPU errors or exceptions in either.
