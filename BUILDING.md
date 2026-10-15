@@ -247,3 +247,10 @@ single shader and 4.3 s for the menus' 55, then drew 59.6. Headless Chrome 155 n
 built all 361 by 47 s in and drew 59.6. At 3840x2000, the stand-in for a laptop's integrated graphics (25 s), Firefox
 waited 0.5 and 6.5 s and drew 59.0, Chrome never waited and drew 59.6. No sound short, no WebGPU errors; Firefox's one
 exception was the first visit's load cut off by `coi_serviceworker.js`'s reload.
+
+Played on N64Recomp-browser v0.46.0 (main 353a4b0 built with its pin moved there, served locally) on 2026-10-15, RTX
+2070, a fresh profile each, one page at a time, a host 14-27% busy, by `tools/shader_plan.json` with `play_page.mjs`:
+through `factory` at 1256x645 headless Chrome 155 never waited and drew 59.4 presents a second (median), Firefox 158
+waited 0.6 s for the logos, 6.4 s as the Rap began, 4.0 s for the menus and 2.4 s for the Factory and drew 59.4; at
+3840x2000 (`--play 25`) Chrome never waited and drew 59.6, Firefox waited 0.5 and 7.0 s and drew 59.5. No sound short,
+no WebGPU errors or exceptions.
