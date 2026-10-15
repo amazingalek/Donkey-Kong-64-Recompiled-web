@@ -1,4 +1,5 @@
 #include "common_structs.h"
+#include "patches.h"
 
 // The shader survey: lets a script take the game to any map by itself, to record the shaders each world draws for
 // the page's prebuilt list (src/rt64_shaders.txt, made by tools/record_shaders.sh) without anyone playing. It does
@@ -19,6 +20,8 @@
 // A nonzero `film`, written in adventure mode, gives the player the Banana Fairy camera (Z and C-down, then B takes
 // a photo) and that much film, so a script can photograph a fairy: the photo is a patch of the frame the CPU copies
 // out of RDRAM (func_global_asm_806FFF88), which is what render to RAM is kept on for.
+// Each change of the game mode it is going to is printed ("shader survey: game mode <n>"), before the frame that
+// loads its map draws, so a script can tell what the game drew before the DK Rap from what the Rap drew.
 
 void func_global_asm_806C9AE0(void);
 void func_global_asm_80731030(void); // clearTemporaryFlags()
@@ -51,6 +54,12 @@ struct ShaderSurvey shader_survey = { { 0x53484452, 0x53525659 }, 0, -1, 0, -1, 
 void shader_survey_frame(void) {
     s32 map, exit, kong;
 
+    static s32 last_mode = -1;
+
+    if (game_mode != last_mode) {
+        recomp_printf("shader survey: game mode %d\n", game_mode);
+        last_mode = game_mode;
+    }
     shader_survey.current_map = current_map;
     shader_survey.game_mode = game_mode_copy;
     if ((shader_survey.film > 0) && (game_mode_copy == GAME_MODE_ADVENTURE)) {

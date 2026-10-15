@@ -6,10 +6,15 @@
 #
 # Recorded by code, not by playing: bash tools/record_shaders.sh (its header says how) runs N64Recomp-browser's
 # tools/record_shaders.mjs with tools/shader_plan.json, which loads the page fresh for each section and has
-# patches/shader_survey.c take the game to each map. Section 0 is what every visit draws before play, as a player
-# who skips with Start reaches the menus: the logos, the DK Rap's first frames, a moment of DK TV's Jungle Japes
-# demo, the title, the main menu and its file select, Sound and Options screens, and the whole DK Rap, whose shaders
-# come one or two a frame, too few to start a section of their own (RT64 waits for a section when a frame wants 4).
+# patches/shader_survey.c take the game to each map. Section 0 is what every visit draws before the DK Rap, the logos:
+# the plan's start ends where the shader survey prints the game's change to the Rap's mode, before the Rap's first
+# frame, so the page draws its first frame once those are built. Then "rap", the whole DK Rap, which every visit
+# starts (Start in the logos goes to it): its first frame draws 31 of its shaders, which starts the section (RT64
+# waits for a section when a frame wants 4), and the rest come one or two a frame. Then "menus", what Start in the Rap
+# reaches: a moment of DK TV's Jungle Japes demo, the title, the main menu and its file select, Sound and Options
+# screens. Every later section first goes to the main menu with what that draws left out. A recording also puts in
+# menus and the later sections the shaders they share with rap and menus, which a visit has built by then; this list
+# leaves those out.
 # Then a new game through the menus, its opening cutscenes into Training Grounds; Training
 # Grounds and DK's house; DK Isles; and a section a world, its lobby and then the world, as a different Kong in
 # each, from arriving to a few seconds in, walking, turning the camera, jumping and the pause menu. Not recorded:
@@ -28,6 +33,7 @@
 0c1849d8 00992c0f fc11fe04 ff13f3ff 1ccb540c
 0f0a4000 00810c0f fc119623 ff2fffff 1ccb540b
 00504240 00892c0f fcff97ff ff2cfe7f 1ccb5408
+section rap
 00504340 00892c0f fcffffff fffdf6fb 1cc9540b
 00504340 00080cff fcffffff fffdf6fb 0800000b
 00504dd8 00882c0f fc119623 ff2fffff 0ccb540c
@@ -61,8 +67,33 @@
 0c192078 00992c0f fc26a004 1f1093ff 1806008c
 00552078 00892c0f fcffffff fffe793c 1cc9540c
 0c192078 00992c0f fc26a004 1f1093ff 1ccf5408
-00504b50 00882ccf fc119623 ff2fffff 0ccb5408
 00504240 00882c0f fc119623 ff2fffff 0ccb5408
+00504dd8 00882c0f fc121824 ff33ffff 0ccb540c
+00504340 00882c0f fc119623 ff2fffff 0ccb5408
+00504240 00892c0f fc119623 ff2fffff 1ccb5408
+005049d8 00882c0f fc121824 ff33ffff 099b1008
+0c1849d8 00992c0f fc26a004 1f1093ff 18060088
+05504270 00882c0f fc41fe83 fffff9fc 0800000c
+0d184270 00992c0f fc127e04 ff13f9ff 1ccb540c
+05504270 00892c0f fc41fe83 fffff9fc 1cc9540c
+0d184270 00992c0f fc11fe04 ff13f3ff 1ccb540c
+05504270 00882c0f fc41fe83 fffff9fc 08000008
+05504270 00892c0f fc41fe83 fffff9fc 1cc95408
+00504b50 00882ccf fc119623 ff2fffff 0ccb5408
+00504240 00892ccf fc119623 ff2fffff 1ccb5408
+05504270 00882c0f fc121824 ff33ffff 088a000c
+0d184270 00992c0f fc26a004 1f1093ff 1ccf540c
+05504270 00882c0f fc121824 ff33ffff 088a0008
+05504270 00882c0f fcffffff fffe793c 0800000c
+0d184270 00992c0f fc26a004 1f1093ff 1806008c
+00504340 00882c0f fc71fee3 fffff7fb 0800000b
+00504b50 00892ccf fc119623 ff2fffff 1ccb5408
+00504340 00892c0f fc119623 ff2fffff 1ccb5408
+0c193078 00992c0f fc26a004 1f1093ff 1806008c
+0c193078 00992c0f fc26a004 1f1093ff 18060088
+00552078 00882c0f fc11fe23 fffff7fb 0ccb540c
+00504dd8 00892c0f fc119623 ff2fffff 1ccb540c
+section menus
 00504340 00882c0f fc121624 ff2fffff 0ccb5408
 00552048 00882c0f fcffffff fffe793c 08000008
 00552230 00882c0f fc127e24 fffff9fc 0ccb540c
@@ -103,22 +134,13 @@
 00504340 00890c0f fcffffff fffdf6fb 1cc9540b
 0d184270 00982c0f fc127e03 fffff9f8 088a000c
 05504270 00892c0f fc41fe83 fffff9fc 1888000c
-0d184270 00992c0f fc127e04 ff13f9ff 1ccb540c
-05504270 00892c0f fc41fe83 fffff9fc 1cc9540c
-0d184270 00992c0f fc11fe04 ff13f3ff 1ccb540c
-05504270 00882c0f fc41fe83 fffff9fc 0800000c
-05504270 00882c0f fc41fe83 fffff9fc 08000008
-05504270 00892c0f fc41fe83 fffff9fc 1cc95408
 00552078 00882c0f fc127e24 fffff9fc 0ccb540c
-00504b50 00892ccf fc119623 ff2fffff 1ccb5408
-00504dd8 00892c0f fc119623 ff2fffff 1ccb540c
 00504340 00892c0f fc121624 ff2fffff 1ccb5408
 0d184270 00992c0f fc11fe04 ff13f3ff 1802008c
 00552078 00892c0f fc41fe83 fffff9fc 18880008
 01504a50 00992c0f fc11fe04 ff13f3ff 1ccb5448
 0c192230 0098ac0f fc127e03 fffff9f8 088a000c
 0c184a50 00992c0f fc1199ff fffffe38 188a0008
-00504240 00892ccf fc119623 ff2fffff 1ccb5408
 0d184270 00982c0f fcffffff fffcf238 088a000c
 0d184270 00982c0f fc127e03 fffff9f8 088a0008
 0d184270 00982c0f fc41c7ff fffffe38 0800000c
@@ -143,21 +165,6 @@
 00504240 00880c0f fcff97ff ff2cfe7f 0ccb5408
 00504340 00880c0f fc119623 ff2fffff 0ccb5408
 0c192230 0098ac0f fc127e03 fffff9f8 0ccb540c
-00504340 00892c0f fc119623 ff2fffff 1ccb5408
-00504dd8 00882c0f fc121824 ff33ffff 0ccb540c
-00504340 00882c0f fc119623 ff2fffff 0ccb5408
-00504240 00892c0f fc119623 ff2fffff 1ccb5408
-005049d8 00882c0f fc121824 ff33ffff 099b1008
-0c1849d8 00992c0f fc26a004 1f1093ff 18060088
-05504270 00882c0f fc121824 ff33ffff 088a000c
-0d184270 00992c0f fc26a004 1f1093ff 1ccf540c
-05504270 00882c0f fc121824 ff33ffff 088a0008
-05504270 00882c0f fcffffff fffe793c 0800000c
-0d184270 00992c0f fc26a004 1f1093ff 1806008c
-00504340 00882c0f fc71fee3 fffff7fb 0800000b
-0c193078 00992c0f fc26a004 1f1093ff 1806008c
-0c193078 00992c0f fc26a004 1f1093ff 18060088
-00552078 00882c0f fc11fe23 fffff7fb 0ccb540c
 section opening
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
