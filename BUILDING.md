@@ -178,90 +178,14 @@ plays the page as a player would, for N64Recomp-browser's `tools/play_page.mjs`:
 main menu and Jungle Japes, reached by `tools/shader_survey.js`, and about a minute of DK on foot there (its header
 says more).
 
-Played from the published page (main 72f4d46, N64Recomp-browser 7b80155) on 2026-10-14 (RTX 2070, an idle host), by
-`tools/shader_plan.json` with N64Recomp-browser's `tools/play_page.mjs`: the launcher, Load ROM, the DK Rap and
-Frantic Factory in both browsers, with sound and no WebGPU errors. On a first visit a local build of the same commit
-in headless Chrome 155 never waited and drew 49-57 frames a second, where on v0.28.0 the DK Rap drew 18-31 for about
-20 s while section 0 built behind it. Firefox 158 waited 12.5 s for section 0 (17.3 s on v0.28.0) and 2.3 s for the
-Factory, and then drew 60. On a 3840x2000 canvas, the stand-in for integrated graphics, Chrome never waited and drew
-52-56; Firefox waited 12.5-13.7 s and then drew 58-62 in one run, and in another, alone on the GPU, presented 30-107 a
-second, the GPU's memory up 3.8 GB as the wait ended: Firefox's animation frames come in bursts there, which the page
-reads as a faster display.
+Where the GPU reports finished work late, as Firefox does on a laptop's Intel UHD, even copies made before a list ends
+fall seconds behind the VIs that queue them. Without RecompFrontend-web 75fe596 the runtime's dummy frames, drawn into
+0x80700000 every VI before the game starts, were copied to RDRAM that way and kept landing after Start, on the game's
+code and audio microcode: there the page never booted, logging `Failed to execute task type: 2` or
+`RuntimeError: index out of bounds` in the wasm 22-27 s in, with nothing drawn and the sound dry. A preload that holds
+`onSubmittedWorkDone` back 100 ms reproduces it in Firefox on any GPU, at the same wasm offset in three boots of three,
+and with 75fe596 the page boots through it and plays into Frantic Factory.
 
-Played again from the page built on N64Recomp-browser b1c35d1 (main a13c6d7) on 2026-10-14, on that canvas, an idle host,
-one page at a time: Firefox 158 waited 12.9 s for the boot's 115, then rt64's pacing switched on 0.6 s after the wait
-and held it at the game's 30 frames a second for the next 70 s, the GPU's memory up 2 GB as the wait ended and flat
-after; Chrome 155 never waited and drew 55-56; neither was short of sound.
-
-Played again from the page built on N64Recomp-browser ed8764a (v0.36.0, main b0f0275) on 2026-10-14, on that canvas,
-an idle host, one page at a time, 90 s: Firefox 158 waited 12.6 s for the boot's 115 and then drew 57-61 throughout,
-rt64's pacing never on (it judges drops over a whole 2 s of presents now, not the first few after the wait); Chrome
-155 never waited and drew 53-56; neither was short of sound.
-
-Played again from the page built on N64Recomp-browser 2efc795 (rt64-web 9ed449d, main 2a6532e) on 2026-10-14, on that
-canvas, a quiet host, one page at a time, 25 s after the waits: Firefox 158 waited 16.1 s for the boot's 115 and
-then drew 59-60, Chrome 155 never waited and drew 56-60, rt64's pacing never on, no sound short, no WebGPU errors.
-
-On a laptop's Intel UHD (Tiger Lake, Windows 11 in its best power efficiency mode) on 2026-10-14, from the published
-page (main 2a6532e, N64Recomp-browser 2efc795), by `tools/shader_plan.json` (`--play 90` and `--section factory`) with
-`play_page.mjs` at 1256x645, Firefox 158 and headless Chrome 155, a fresh profile each, one page at a time; presents a
-second are medians after the waits, and the RTX beside the Intel chip drew nothing. Chrome never waited and drew 30.0
-(29.9-36.3), the game's 30, and 29.9 to the Factory, reaching map 80 with its cutscene drawn right and no sound short.
-Firefox never booted, in either run: the plan's probe found no map loaded, and 22-27 s in the page logged `Failed to
-execute task type: 2` (`--play`) or `RuntimeError: index out of bounds` in the wasm (`--section factory`); nothing
-drew and the sound ran dry. The ROM was byte-swapped (.v64), which the page converts, and the same file played in
-Chrome. No WebGPU errors. The ROM's byte order wasn't the cause: those were the runtime's dummy frames, drawn into
-0x80700000 every VI before the game starts and copied to RDRAM, which Firefox's late reports of finished GPU work left
-seconds behind; they kept landing after Start, on the game's code and audio microcode. In Firefox 158 on an RTX 2070,
-with `onSubmittedWorkDone` held back 100 ms by a preload (a stand-in for that laptop), the published page failed the
-same way, at the same wasm offset, in three boots of three; with RecompFrontend-web 75fe596, which keeps the dummy
-frame out of RDRAM, a local build waited 15 s for the boot's shaders and played into the Factory.
-
-Played again from the page built on N64Recomp-browser d3b9031 (N64ModernRuntime-web f0e0884, RecompFrontend-web 75fe596,
-rt64-web f34b19c; main ed643af, gh-pages 1c20bcc) on 2026-10-15, its files served locally with the cross-origin headers,
-RTX 2070, 1256x645, a fresh profile each, the host's every core busy with other work, by `tools/shader_plan.json`'s
-start and then 40 s with `play_page.mjs`: headless Chrome 155 never waited and drew 59.6 presents a second (median),
-Firefox 158 waited 15.9 s for the boot's 115 and then drew 59.5. No sound short, no WebGPU errors or exceptions in
-either.
-
-Played again from Pages, built on N64Recomp-browser 7277a2e (rt64-web 8bea892, tile copies reused from one display list
-to the next; main 5391696, gh-pages 90d5216) on 2026-10-15, RTX 2070, 1256x645, a fresh profile each, the host's every
-core busy with other work, by `tools/shader_plan.json`'s `factory` section with `play_page.mjs`: headless Chrome 155
-never waited and drew 59.2 presents a second (median), Firefox 158 waited 13.3 s for the boot's 115 and 2.3 s for the
-Factory's 55 and drew 58.5. No sound short, no WebGPU errors or exceptions in either.
-
-Played from Pages with render to RAM's copy a list late (main 6a59ade, gh-pages fcf1307) on 2026-10-15, RTX 2070, 1256x645, a fresh
-profile each, a host ~30% busy, by `tools/shader_plan.json`'s `isles` section twice with `play_page.mjs`: headless
-Chrome 155 never waited and drew 58.7 presents a second (median), Firefox 158 waited 29.9 s for the boot's 115 and 7 s
-for DK Isles' 74 and drew 58.6. Sound short only in Chrome's first seconds (396 frames), no WebGPU errors; Firefox's
-one exception was the first visit's load cut off by `coi_serviceworker.js`'s reload.
-
-The same page in Firefox 158 on 2026-10-15, RTX 2070, a fresh profile each, a host ~20% busy, by `tools/shader_plan.json`'s
-start and then the game by itself: with `onSubmittedWorkDone` held back 100 ms by a preload (the laptop's late reports;
-1256x645, 40 s) it booted, waited 17.4 s for the boot's 115 and drew 18.8 presents a second, which the hold caps, with
-no sound short, no WebGPU errors and no exception after the first load's; at 3840x2000, the stand-in for a laptop's
-integrated graphics (25 s, no hold), it waited 17.4 s and drew 59.6, no sound short.
-
-Played from Pages with the boot's section the logos alone (main 4cc24c6, N64Recomp-browser 91c0557) on 2026-10-15,
-RTX 2070, a fresh profile each, a host ~20% busy, the game by itself after Start Game: Firefox 158 at 1256x645 waited
-0.7 s for the logos' 10 before the first frame and 6.4 s for the DK Rap's 49 as the Rap began, then drew 59.4 presents
-a second (median) for 90 s; pressing Start through the Rap to the main menu, it waited 0.5 and 6.3 s, 0.1 s for a
-single shader and 4.3 s for the menus' 55, then drew 59.6. Headless Chrome 155 never waited,
-built all 361 by 47 s in and drew 59.6. At 3840x2000, the stand-in for a laptop's integrated graphics (25 s), Firefox
-waited 0.5 and 6.5 s and drew 59.0, Chrome never waited and drew 59.6. No sound short, no WebGPU errors; Firefox's one
-exception was the first visit's load cut off by `coi_serviceworker.js`'s reload.
-
-Played on N64Recomp-browser v0.46.0 (main 353a4b0 built with its pin moved there, served locally) on 2026-10-15, RTX
-2070, a fresh profile each, one page at a time, a host 14-27% busy, by `tools/shader_plan.json` with `play_page.mjs`:
-through `factory` at 1256x645 headless Chrome 155 never waited and drew 59.4 presents a second (median), Firefox 158
-waited 0.6 s for the logos, 6.4 s as the Rap began, 4.0 s for the menus and 2.4 s for the Factory and drew 59.4; at
-3840x2000 (`--play 25`) Chrome never waited and drew 59.6, Firefox waited 0.5 and 7.0 s and drew 59.5. No sound short,
-no WebGPU errors or exceptions.
-
-Played on N64Recomp-browser v0.50.0 (main 6262de0 built with its pin moved there, served locally) on 2026-10-16, RTX
-2070, a fresh profile each, one page at a time, a quiet host, by `tools/shader_plan.json` through `factory` with
-`play_page.mjs`: at 1256x645 headless Chrome 155 never waited and drew 55.6 presents a second (median; headless Chrome
-drew about 56 frames a second that night: four games played from Pages beside their builds, as a control, read 54.8-55.6
-too), Firefox 158 waited 11.0 s (13.9 s on v0.46.0) and drew 59.6; uncapped at 3840x2000 (`--uncapped --play 25`, the
-first such run) Chrome drew 346.1, at the uncapped rate's ceiling, and Firefox 225.0 after a 4.6 s wait. No sound short
-and no WebGPU errors in any.
+How the page plays, in each browser and build, is recorded in N64Recomp-browser's
+[`plays.jsonl`](https://github.com/amazingalek/N64Recomp-browser/blob/main/plays.jsonl) and its
+[games table](https://github.com/amazingalek/N64Recomp-browser#games).
