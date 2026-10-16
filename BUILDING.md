@@ -173,7 +173,10 @@ are a section of their own so that the page draws its first frame at once: as on
 115 pipelines, Firefox waited 13-30 s before it. A shader the list
 misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
-says how): it takes about half an hour, and then the page is built again with the new list.
+says how): it takes about half an hour, and then the page is built again with the new list. `tools/play_plan.json`
+plays the page as a player would, for N64Recomp-browser's `tools/play_page.mjs`: the logos and the DK Rap, then the
+main menu and Jungle Japes, reached by `tools/shader_survey.js`, and about a minute of DK on foot there (its header
+says more).
 
 Played from the published page (main 72f4d46, N64Recomp-browser 7b80155) on 2026-10-14 (RTX 2070, an idle host), by
 `tools/shader_plan.json` with N64Recomp-browser's `tools/play_page.mjs`: the launcher, Load ROM, the DK Rap and
