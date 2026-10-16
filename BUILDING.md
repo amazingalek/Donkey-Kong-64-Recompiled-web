@@ -254,3 +254,11 @@ through `factory` at 1256x645 headless Chrome 155 never waited and drew 59.4 pre
 waited 0.6 s for the logos, 6.4 s as the Rap began, 4.0 s for the menus and 2.4 s for the Factory and drew 59.4; at
 3840x2000 (`--play 25`) Chrome never waited and drew 59.6, Firefox waited 0.5 and 7.0 s and drew 59.5. No sound short,
 no WebGPU errors or exceptions.
+
+Played on N64Recomp-browser v0.50.0 (main 6262de0 built with its pin moved there, served locally) on 2026-10-16, RTX
+2070, a fresh profile each, one page at a time, a quiet host, by `tools/shader_plan.json` through `factory` with
+`play_page.mjs`: at 1256x645 headless Chrome 155 never waited and drew 55.6 presents a second (median; headless Chrome
+drew about 56 frames a second that night: four games played from Pages beside their builds, as a control, read 54.8-55.6
+too), Firefox 158 waited 11.0 s (13.9 s on v0.46.0) and drew 59.6; uncapped at 3840x2000 (`--uncapped --play 25`, the
+first such run) Chrome drew 346.1, at the uncapped rate's ceiling, and Firefox 225.0 after a 4.6 s wait. No sound short
+and no WebGPU errors in any.
