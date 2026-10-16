@@ -119,6 +119,12 @@ message never taken no other is sent. Now the retrace handler (`patches/timing_f
 itself, as the thread's own request would, and all 9 boots with it played on. Firefox runs the game through the wait,
 and 3 boots without the fix kept their sound.
 
+After Start the page presents nothing for ~1.5 s twice in the boot. Both are the game's: its main thread
+(`func_global_asm_805FBFF4`) waits on one message for 1.30 s and then 1.42 s, with every other game thread, the
+display list thread and the page's thread idle and no RSP task running, so there is no frame to present (a CPU
+profile of every thread, headless Chrome 155). What the web support adds to them, the threads the boot starts
+waiting for a worker, is in N64Recomp-browser's docs/findings.md (Present gaps after Start).
+
 With steps 1 to 3 done, patch the submodules:
 
 ```bash
