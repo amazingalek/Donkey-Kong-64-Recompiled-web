@@ -162,7 +162,7 @@ when the page is built, so no scene draws with the slow ubershader. The list is 
 361 pipelines: section 0, the logos (10 pipelines), then the DK Rap (49), which every visit reaches (Start in the logos
 goes to it) and whose first frame wants 31 of its shaders at once, then the menus (55: a moment of DK TV's Jungle Japes
 demo, the title, the main menu and its screens), then the new game's opening, Training Grounds and DK's house, DK
-Isles, and a world each with its lobby. In Chrome the whole list is built behind the game from its first frame,
+Isles, and a world each with its lobby. In Chrome the whole list is built in the background,
 sections 0 and 1 first on half the host's cores and then the rest one at a time, a section the game has reached moved
 to the front, and the game waits only when a frame wants 4 or more of a section's shaders that aren't built yet, under
 a small "Preparing graphics" indicator in a corner. Firefox builds a pipeline in line with the rest of its GPU work, so
