@@ -23,7 +23,7 @@
 # turned) as the Kong the survey puts there: Aztec's Llama temple, its Dogadon and the beetle race; Mad Jack, and
 # Factory's DK Arcade and Jetpac (Cranky's, any world's), watched; Galleon's lighthouse, the mermaid's palace and
 # Pufftoss; Fungi's giant mushroom and its Dogadon; Crystal Caves' ice castle and Army Dillo; Castle's museum and King
-# Kut Out; and Kremling Kosh, a bonus barrel's minigame, watched, in Japes'. Not recorded: the other bosses, bonus
+# Kut Out; K. Rool's fight with DK, in Helm's; and Kremling Kosh, a bonus barrel's minigame, watched, in Japes'. Not recorded: the other bosses, bonus
 # barrels and minigames, Kong Battle, and what else a world draws further in (RT64 builds those when the game first
 # asks for them, and the page remembers them for the next visit). The last
 # section, "earlier", holds what the list had before it was recorded this way that this recording didn't meet.
@@ -706,6 +706,7 @@ section galleon
 0c192038 00982c0f fc127e03 fffff9f8 0bba440c
 0c1849d8 00982c0f fc121803 fffffff8 088a0008
 00552d58 00892c0f fc41fe83 fffff9fc 1cc9540c
+00504340 00882cff fcffffff fffdf6fb 0800000b
 section fungi
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -759,6 +760,7 @@ section fungi
 0c192078 00992c0f fc11fe04 fffff3fc 1ccb540c
 00552078 00882c0f fcffffff fffe793c 08000008
 0c184dd8 00992c0f fc26a004 1ffc93fc 188e0008
+0d184270 0099ac0f fc11fe04 ff13f3ff 1ccb540c
 section caves
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -824,6 +826,8 @@ c8104a50 00982c0f fc127fff fffff238 088a0008
 00552078 0088ac0f fcffffff fffe793c 0800000c
 005049d8 0088ac0f fc127e24 fffff9fc 088a000c
 00552230 00882c0f fcffffff fffe793c 08000008
+c8112230 00982c0f fc127fff fffff838 0bba440c
+c8104a50 00982c0f fc127fff fffff238 099b1008
 section castle
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -926,6 +930,7 @@ section helm
 00504a50 00882c0f fc11fe23 fffff7fb 088a0008
 00504240 00882c0f fc121824 ff33ffff 0ccb5408
 0c192078 00992c0f fc11fe04 fffff3fc 1ccb540c
+00552478 00882c0f fcffffff fffe793c 0800000c
 section earlier
 00504340 00892cff fc119623 ff2fffff 1ccb5408
 005049d8 00882c0f fc119623 ff2fffff 088a000c

@@ -26,7 +26,7 @@
   "turned) as the Kong the survey puts there: Aztec's Llama temple, its Dogadon and the beetle race; Mad Jack, and",
   "Factory's DK Arcade and Jetpac (Cranky's, any world's), watched; Galleon's lighthouse, the mermaid's palace and",
   "Pufftoss; Fungi's giant mushroom and its Dogadon; Crystal Caves' ice castle and Army Dillo; Castle's museum and King",
-  "Kut Out; and Kremling Kosh, a bonus barrel's minigame, watched, in Japes'. Not recorded: the other bosses, bonus",
+  "Kut Out; K. Rool's fight with DK, in Helm's; and Kremling Kosh, a bonus barrel's minigame, watched, in Japes'. Not recorded: the other bosses, bonus",
   "barrels and minigames, Kong Battle, and what else a world draws further in (RT64 builds those when the game first",
   "asks for them, and the page remembers them for the next visit). The last",
   "section, \"earlier\", holds what the list had before it was recorded this way that this recording didn't meet.",
@@ -1269,6 +1269,15 @@
     ["hold", "ArrowLeft", "ArrowLeft", 37, 800],
     ["hold", "ArrowRight", "ArrowRight", 39, 800],
     ["wait", 1500]
+  ]},
+  {"name": "helm", "steps": [
+    ["keep", false],
+    ["eval", "surveyMap(0x50, 0, -1)"],
+    ["eval", "surveyMode(5)"],
+    ["keep", true],
+    ["evalFile", "shader_survey.js"],
+    ["eval", "surveyMap(0xcb, 0, 0)"],
+    ["wait", 25000]
   ]}
  ]
 }
