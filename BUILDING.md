@@ -164,7 +164,7 @@ sets them after one reload. The player picks their ROM (the plain one, not the d
 the settings and the saves are kept in the browser's IndexedDB for that origin.
 
 The page builds the shaders the game draws with from `src/rt64_shaders.txt`, specialized and run through `spirv-opt`
-when the page is built, so no scene draws with the slow ubershader. The list is in 15 sections, 518 descriptions (475 of
+when the page is built, so no scene draws with the slow ubershader. The list is in 15 sections, 519 descriptions (475 of
 them 361 pipelines): section 0, the logos (10 pipelines), then the DK Rap (49), which every visit reaches (Start in the logos
 goes to it) and whose first frame wants 31 of its shaders at once, then the menus (55: a moment of DK TV's Jungle Japes
 demo, the title, the main menu and its screens), then the new game's opening, Training Grounds and DK's house, DK
