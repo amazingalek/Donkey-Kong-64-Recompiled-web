@@ -17,9 +17,15 @@
 # leaves those out.
 # Then a new game through the menus, its opening cutscenes into Training Grounds; Training
 # Grounds and DK's house; DK Isles; and a section a world, its lobby and then the world, as a different Kong in
-# each, from arriving to a few seconds in, walking, turning the camera, jumping and the pause menu. Not recorded:
-# bosses, bonus barrels and minigames, Kong Battle, and what a world draws further in that its start doesn't (RT64
-# builds those when the game first asks for them, and the page remembers them for the next visit). The last
+# each, from arriving to a few seconds in, walking, turning the camera, jumping and the pause menu. Seven worlds'
+# sections are recorded in a second load too, for places further in where a long play met shaders the world's start
+# doesn't draw, each played about 25 s (walking out and back, jumps, attacks, Z with C-down and with B, the camera
+# turned) as the Kong the survey puts there: Aztec's Llama temple, its Dogadon and the beetle race; Mad Jack, and
+# Factory's DK Arcade and Jetpac (Cranky's, any world's), watched; Galleon's lighthouse, the mermaid's palace and
+# Pufftoss; Fungi's giant mushroom and its Dogadon; Crystal Caves' ice castle and Army Dillo; Castle's museum and King
+# Kut Out; and Kremling Kosh, a bonus barrel's minigame, watched, in Japes'. Not recorded: the other bosses, bonus
+# barrels and minigames, Kong Battle, and what else a world draws further in (RT64 builds those when the game first
+# asks for them, and the page remembers them for the next visit). The last
 # section, "earlier", holds what the list had before it was recorded this way that this recording didn't meet.
 # Flags follow settings (filtering, HDR, MSAA, upscaling), so a change to one of those defaults means recording
 # again.
@@ -494,6 +500,7 @@ section japes
 0c192230 00980c0f fc127e03 fffff9f8 088a000c
 0c192230 00980c0f fc272c04 1ffc93fc 0ccf540c
 005041c8 00880c0f fc119623 ff2fffff 0ccb5408
+00504240 00882c0f fc11fe23 fffff3f9 0ccb5408
 section aztec
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -535,6 +542,26 @@ c8112230 0098ac0f fcffffff fffe7838 0800000c
 01504a50 00982c0f fc121803 fffffff8 088a0048
 01504a50 00982c0f fc272c04 1ffc93fc 0ccf544c
 0c192078 00992c0f fc11fe04 fffff3fc 1ccb540c
+0c192230 0098ac0f fcffffff fffcf238 088a000c
+0c184a50 00982c0f fc272c03 1ffc93fb 088e0008
+0c184a50 00992c0f fc1199ff fffffe38 1ccb540c
+01504a50 00992c0f fc119804 fffffff8 188a004c
+0c184a50 00980c0f fc121803 fffffff8 0ccb5408
+0d184270 00988c0f fc127e03 fffff9f8 0ccb540c
+01504a50 00990c0f fc1199ff fffffe38 188a0048
+01504a50 00990c0f fc119804 fffffff8 188a004c
+01504a50 00990c0f fc1199ff fffffe38 1ccb544c
+0c192230 0098ac0f fc41c7ff fffffe38 0800000c
+0c184a50 00982c0f fc121803 fffffff8 099b1008
+00552478 00892c0f fc41fe83 fffff9fc 1999100c
+0c192478 00992c0f fc11fe04 ff13f3ff 1802008c
+0c192478 00992c0f fc11fe04 ff13f3ff 1ccb540c
+00404240 00882c0f fc11fe23 fffff7fb 0ccb5408
+00552230 0088ac0f fcffffff fffcf279 0ccb540c
+0c192230 00992c0f fc26a004 1ffc93fc 1806008c
+00552230 00882c0f fcffffff fffcf279 088a000c
+00504a50 0088ac0f fc127e24 fffff9fc 088a000c
+0c192078 00992c0f fc119804 fffffff8 1ccb540c
 section factory
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -606,6 +633,12 @@ section factory
 00504a50 00882c0f fc121824 ff33ffff 088a000c
 00552230 00882c0f fc121824 ff33ffff 088a000c
 0d184270 00982c0f fc127e03 fffff9f8 099b100c
+0f0a4000 00082c0f fcffffff fffe793c 0800000b
+00504240 00000c0f fc11fe23 fffff3f9 04cb540b
+00504240 00000c0f fc119623 ff2fffff 04cb540b
+00504340 00000c0f fcffffff fffdf6fb 0800000b
+0f0a4000 00000c0f fc30fe61 55fef379 04cb540b
+00504340 00080c0f fcffffff fffdf6fb 0800000b
 section galleon
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -668,6 +701,11 @@ section galleon
 0c184240 00992c0f fc1197ff fffffe38 1ccb5408
 00504dd8 00880c0f fc119623 ff2fffff 0ccb5408
 00504240 00890ccf fc11fe23 fffff7fb 18035408
+00552078 0088ac0f fc127e24 fffff9fc 088a0008
+00552078 00882c0f fc127e24 fffff9fc 0bba440c
+0c192038 00982c0f fc127e03 fffff9f8 0bba440c
+0c1849d8 00982c0f fc121803 fffffff8 088a0008
+00552d58 00892c0f fc41fe83 fffff9fc 1cc9540c
 section fungi
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -719,6 +757,8 @@ section fungi
 0d184270 00992c0f fc119804 fffffff8 199b100c
 01504a50 0098ac0f fc121803 fffffff8 0ccb5448
 0c192078 00992c0f fc11fe04 fffff3fc 1ccb540c
+00552078 00882c0f fcffffff fffe793c 08000008
+0c184dd8 00992c0f fc26a004 1ffc93fc 188e0008
 section caves
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -781,6 +821,9 @@ c8104a50 00982c0f fc127fff fffff238 088a0008
 00553078 00882c0f fc119623 ff2fffff 08035408
 0c184240 00982c0f fc1197ff fffffe38 0ccb5408
 00504240 00890ccf fc11fe23 fffff7fb 18035408
+00552078 0088ac0f fcffffff fffe793c 0800000c
+005049d8 0088ac0f fc127e24 fffff9fc 088a000c
+00552230 00882c0f fcffffff fffe793c 08000008
 section castle
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -851,6 +894,7 @@ c8104a50 00982c0f fc127fff fffff238 088a000c
 00504dd8 00882c0f fc119623 ff2fffff 0ccb5408
 0c193078 0098ac0f fc121803 fffffff8 088a000c
 00552230 00882c0f fc121824 ff33ffff 088a000c
+005049d8 00892c0f fc41fe83 fffff9fc 1888000c
 section helm
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
