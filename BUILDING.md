@@ -180,9 +180,10 @@ are a section of their own so that the page draws its first frame at once: as on
 misses is built behind the game, and the page remembers it and builds it with its section on the next visit. To
 record the list again, build the page and run `bash tools/record_shaders.sh build-web <the plain ROM>` (its header
 says how): it takes about half an hour, and then the page is built again with the new list. `tools/play_plan.json`
-plays the page as a player would, for N64Recomp-browser's `tools/play_page.mjs`: the logos and the DK Rap, then the
-main menu and Jungle Japes, reached by `tools/shader_survey.js`, and about a minute of DK on foot there (its header
-says more).
+plays the page as a player would, for N64Recomp-browser's `tools/play_page.mjs`, in 2-3 minutes: the logos and the
+DK Rap, then the main menu and Jungle Japes, reached by `tools/shader_survey.js`, and about 45 s of DK on foot there.
+`tools/play_plan_extended.json`, for when a longer play is needed, goes on to Angry Aztec, Gloomy Galleon and Creepy
+Castle in the same game, about 35 s each, in at most 5 minutes (their headers say more).
 
 Where the GPU reports finished work late, as Firefox does on a laptop's Intel UHD, even copies made before a list ends
 fall seconds behind the VIs that queue them. Without RecompFrontend-web 75fe596 the runtime's dummy frames, drawn into

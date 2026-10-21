@@ -27,6 +27,8 @@
 # barrels and minigames, Kong Battle, and what else a world draws further in (RT64 builds those when the game first
 # asks for them, and the page remembers them for the next visit). The last
 # section, "earlier", holds what the list had before it was recorded this way that this recording didn't meet.
+# The last three of japes, the last of aztec and the last two of castle are what tools/play_plan_extended.json drew beyond the
+# list in those levels.
 # Flags follow settings (filtering, HDR, MSAA, upscaling), so a change to one of those defaults means recording
 # again.
 00553048 00082cff fcffffff fffcf279 04cb540b
@@ -501,6 +503,9 @@ section japes
 0c192230 00980c0f fc272c04 1ffc93fc 0ccf540c
 005041c8 00880c0f fc119623 ff2fffff 0ccb5408
 00504240 00882c0f fc11fe23 fffff3f9 0ccb5408
+0c193078 00990c0f fc1199ff fffffe38 188a0008
+0c192230 00980c0f fc127e03 fffff9f8 088a0008
+0c192230 00980c0f fc41c7ff fffffe38 0800000c
 section aztec
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -562,6 +567,7 @@ c8112230 0098ac0f fcffffff fffe7838 0800000c
 00552230 00882c0f fcffffff fffcf279 088a000c
 00504a50 0088ac0f fc127e24 fffff9fc 088a000c
 0c192078 00992c0f fc119804 fffffff8 1ccb540c
+0c193078 00990c0f fc1199ff fffffe38 188a000c
 section factory
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
@@ -900,6 +906,8 @@ c8104a50 00982c0f fc127fff fffff238 088a000c
 00552230 00882c0f fc121824 ff33ffff 088a000c
 005049d8 00892c0f fc41fe83 fffff9fc 1888000c
 00504340 00892c0f fcffffff fffdf6fb 1800008b
+00552230 00890c0f fc121824 ff33ffff 188a0008
+0c193078 00980c0f fc121803 fffffff8 099b100c
 section helm
 00000000 00080cff fcffffff fffcf279 0003540b
 00000000 00080c0f fcffffff fffcf279 0803540b
