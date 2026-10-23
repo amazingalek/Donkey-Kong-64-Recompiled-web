@@ -86,7 +86,7 @@ Voilà! You should now have a `DK64Recompiled` executable in the build directory
 This fork's `main` branch also builds with [Emscripten](https://emscripten.org) into a page, `DK64Recompiled.html`,
 that draws through WebGPU. `lib/rt64`, `lib/N64ModernRuntime` and `lib/RecompFrontend` are Donkey Kong 64:
 Recompiled's own, at the same commits (its mod store and `--game` included), and
-[N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser) (`lib/N64Recomp-browser`) patches their checkouts
+[N64Recomp-browser](https://github.com/n64hub/N64Recomp-browser) (`lib/N64Recomp-browser`) patches their checkouts
 with the web support and makes the game a page. The patches change nothing in the desktop build. Mods and the mod store
 are off on the page: the store fetches with curl, which a browser hasn't got, so `web/curl` stands in for it there
 and nothing reaches it. RT64's render to RAM stays on, as the game reads its own
@@ -194,5 +194,5 @@ code and audio microcode: there the page never booted, logging `Failed to execut
 and with 75fe596 the page boots through it and plays into Frantic Factory.
 
 How the page plays, in each browser and build, is recorded in N64Recomp-browser's
-[`plays.jsonl`](https://github.com/amazingalek/N64Recomp-browser/blob/main/plays.jsonl) and its
-[games table](https://github.com/amazingalek/N64Recomp-browser#games).
+[`plays.jsonl`](https://github.com/n64hub/N64Recomp-browser/blob/main/plays.jsonl) and its
+[games table](https://github.com/n64hub/N64Recomp-browser#games).
